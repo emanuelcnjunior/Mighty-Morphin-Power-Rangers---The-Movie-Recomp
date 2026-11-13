@@ -1,0 +1,2 @@
+snesrecomp=8c5219b42de7b26f15890d16b84fabb442bdbe5d
+recomp-ui=5aece1f2ab7447593465d21905ae7408eb656c59

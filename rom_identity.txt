@@ -1,0 +1,26 @@
+# ROM identity for Mighty Morphin Power Rangers The Movie â€” the single source of truth.
+#
+# Read by three consumers, so a revision change is made once, here:
+#   - the build   (CMake generates snesrecomp_rom_identity.h from this file)
+#   - tools/regen.sh
+#   - .github/workflows/release.yml
+#
+# Format is `key = value`, one per line; `#` starts a comment. Values may be
+# quoted. Leaving a digest empty means the build cannot verify a ROM it is
+# handed â€” it will say so rather than accept it.
+
+display_name    = Mighty Morphin Power Rangers The Movie
+rom_file        = Mighty Morphin Power Rangers - The Movie (USA).sfc
+# Every digest of the bare image (copier header stripped), so the Retro
+# catalog can take a submission's identity from this file rather than ask
+# the submitter to hash the ROM again. The build verifies on crc32/sha256.
+expected_crc32  = e3ef6201
+expected_md5    = f184e696c1fb1c984e530f504eebd234
+expected_sha1   = 82fbe365bc96fe3f03c3eb12e1620910b15f01f9
+expected_sha256 = c706b70097c679f6f0ced6f77a30620807d0b2555fc3c683c0ec2fc791176039
+rom_size        = 1572864
+mapping         = lorom
+region          = USA
+# What a mod package's [[target]] game_id must name to apply to this title
+# (snesrecomp/docs/MOD_PACKAGES.md). Stable across revisions on purpose.
+game_id         = mightymorphinpowerrangersthemovie-usa

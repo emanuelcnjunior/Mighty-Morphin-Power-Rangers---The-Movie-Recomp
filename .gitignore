@@ -1,0 +1,25 @@
+# Copyrighted game data must stay local.
+/rom/*
+!/rom/.gitkeep
+
+# Generated analysis/build output.
+/build/
+/build-*/
+/out/
+/dist/
+/saves/
+/.deps/
+/.scaffold/
+/src/gen/*
+/recomp/funcs.h
+/rom.cfg
+/keybinds.ini
+/config.ini
+/input.ini
+/last_run_report.json
+/post_mortem*.json
+/crash*.json
+*.sfc
+*.smc
+*.srm
+*.log
