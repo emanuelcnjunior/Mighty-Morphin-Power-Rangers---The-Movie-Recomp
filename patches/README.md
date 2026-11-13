@@ -1,5 +1,10 @@
 # Local framework fixes
 
+`snesrecomp-select-hd.patch` adds an opt-in primary-controller Select tap for
+Original/HD. It fires on release, suppresses chords and modal input, and avoids
+double toggles when DS4Windows exposes both physical and virtual controllers.
+Other titles keep their existing Start shortcut. CMake applies both patches.
+
 `snesrecomp-display-memory.patch` applies to the pinned SNESRecomp checkout.
 CMake applies it idempotently when configuring the game or its runtime tests.
 The submodule therefore appears modified; keep the patch with the game until

@@ -50,6 +50,25 @@ cmake --build build --config Release --parallel 4
 
 Generated ROM-derived C under `src/gen/` is intentionally ignored.
 
+## Save/load and HD presentation
+
+The desktop build integrates five manual save-state slots plus a separate Quick
+Save, guarded full-machine restoration, an Original/HD GPU presenter, Scale2x,
+Sharp and Nearest filters, fullscreen controls and optional external texture
+packs. The sprite display-memory fix is retained.
+
+- F1 / L2: Quick Save. F2 / R2: Quick Load.
+- F11 / Share+R1: save-state browser.
+- F6 / P1 Select (Share): Original/HD. F10: graphics settings. Alt+Enter: fullscreen.
+- Ctrl+L / Share+L3: in-game launcher.
+
+On Windows saves live in `%LOCALAPPDATA%\PowerRangersMovieRecomp\saves\`.
+Version 0.2.0 starts fullscreen; a Select tap toggles HD without interfering
+with Select-based menu gestures or changing the original Start action.
+HD filtering works without a texture pack; redrawn game artwork is not bundled.
+See [save/load and graphics guide](docs/save-and-graphics.md) for controls,
+compatibility, texture-pack authoring and reproducible validation.
+
 ## Roadmap
 
 1. Decode the reset path and hardware initialization.

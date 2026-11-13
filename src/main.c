@@ -27,6 +27,8 @@
 
 #include "host_main.h"
 #include "game_rtl.h"
+#include "game_paths.h"
+#include <string.h>
 #include "snesrecomp_rom_identity.h"  /* generated from rom_identity.txt */
 
 #ifndef __ANDROID__
@@ -53,9 +55,23 @@ static const SnesDesktopHostGame kGameHost = {
     .build_version       = SNES_GAME_VERSION,
     .game_info           = &kGameInfo,
     .num_players         = 2,
+    .graphics_profile    = 1,
+    .display_aspect_supported = 1,
+    .in_game_launcher    = 1,
+    .after_config        = &GameConfigurePresentation,
+    .default_config_ini  =
+        "[General]\nAutosave = 0\n"
+        "[Graphics]\nGraphicsProfileVersion = 4\nGraphicsMode = 1\n"
+        "GraphicsFilter = 1\nNewRenderer = 1\nNoSpriteLimits = 1\n"
+        "Fullscreen = 1\nWindowScale = 3\nIgnoreAspectRatio = 0\n"
+        "DisplayAspect = 0\nIntegerScale = 0\nVSync = 1\n"
+        "[Sound]\nEnableAudio = 1\nVolume = 100\n"
+        "[KeyMap]\nQuickSave = F1\nQuickLoad = F2\nSaveStateMenu = F11\n"
+        "GraphicsToggle = F6\nGraphicsMenu = F10\nHDReload = F4\nOpenLauncher = Ctrl+l\n"
+        "[GamepadMap]\nEnableGamepad1 = true\nEnableGamepad2 = true\n",
     /* Battery-backed SRAM shows the launcher's SAVES panel. Leave NULL for a
      * title without one. The path is exe-relative. */
-    .sram_path           = "saves/save.srm",
+    .sram_path           = NULL, /* USA cartridge has no battery SRAM. */
 };
 
 #ifndef __ANDROID__
@@ -63,5 +79,9 @@ static const SnesDesktopHostGame kGameHost = {
 #endif
 int main(int argc, char **argv)
 {
+    for (int i = 1; i < argc; ++i)
+        if (!strcmp(argv[i], "--help") || !strcmp(argv[i], "-h"))
+            return snesrecomp_desktop_main(&kGameHost, argc, argv);
+    if (!GamePrepareUserData()) return 1;
     return snesrecomp_desktop_main(&kGameHost, argc, argv);
 }

@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.20)
 project(MightyMorphinPowerRangersTheMovieSNESRecomp C CXX)
 
 set(CMAKE_C_STANDARD 11)
+set(POWER_RANGERS_TEST_ENTRY "" CACHE STRING "Private runtime probe: save, gpu, or packs")
+set_property(CACHE POWER_RANGERS_TEST_ENTRY PROPERTY STRINGS "" save gpu packs)
 
 # Release pin for lobby matching. Release builds stamp the VERSION file so two
 # peers can prove they are the same build; everything else stamps "dev".
@@ -39,13 +41,34 @@ set(SNESRECOMP_ENABLE_MODS ON CACHE BOOL
     "Mod package loader + trusted plugins (required for every title)" FORCE)
 include(${SNESRECOMP_ROOT}/runner/runner.cmake)
 
+set(_game_entry src/main.c)
+if(POWER_RANGERS_TEST_ENTRY STREQUAL "save")
+    set(_game_entry tests/save_runtime_probe.c)
+elseif(POWER_RANGERS_TEST_ENTRY STREQUAL "gpu")
+    set(_game_entry tests/graphics_gpu_probe.c)
+elseif(POWER_RANGERS_TEST_ENTRY STREQUAL "packs")
+    set(_game_entry tests/hd_pack_probe.c)
+elseif(NOT POWER_RANGERS_TEST_ENTRY STREQUAL "")
+    message(FATAL_ERROR "POWER_RANGERS_TEST_ENTRY must be save, gpu, packs, or empty")
+endif()
 add_executable(MightyMorphinPowerRangersTheMovieSNESRecomp
     ${SNESRECOMP_RUNNER_SOURCES}
-    src/main.c
+    ${_game_entry}
     src/host_contract.c
     src/game_rtl.c
+    src/game_save.c
+    src/game_paths.c
     src/gen_stubs.c
 )
+
+# Save files contain native execution residue. Only the same source/ABI
+# contract may restore it; validate before changing the live machine.
+include("${CMAKE_SOURCE_DIR}/cmake/save_schema.cmake")
+target_include_directories(MightyMorphinPowerRangersTheMovieSNESRecomp PRIVATE
+    "${CMAKE_CURRENT_BINARY_DIR}")
+target_compile_definitions(MightyMorphinPowerRangersTheMovieSNESRecomp PRIVATE
+    SNES_SAVESTATE_SLOTS=5 SNESRECOMP_PERSISTENT_SAVE_PROFILE=1
+    SNESRECOMP_HD_ASSETS=1)
 
 # ROM identity. rom_identity.txt is the one place the digests live: the build
 # turns it into snesrecomp_rom_identity.h (SNESRECOMP_ROM_EXPECTED_SHA256 and

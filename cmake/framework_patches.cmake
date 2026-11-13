@@ -1,12 +1,13 @@
 # Keep fixes to the pinned framework reproducible on a fresh checkout.
 function(power_rangers_patch_framework framework_root)
   find_package(Git REQUIRED)
-  set(patch "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../patches/snesrecomp-display-memory.patch")
+  foreach(patch_name snesrecomp-display-memory.patch snesrecomp-select-hd.patch)
+  set(patch "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../patches/${patch_name}")
   execute_process(COMMAND "${GIT_EXECUTABLE}" -C "${framework_root}"
     apply --reverse --check "${patch}"
     RESULT_VARIABLE already_applied OUTPUT_QUIET ERROR_QUIET)
   if(already_applied EQUAL 0)
-    return()
+    continue()
   endif()
   execute_process(COMMAND "${GIT_EXECUTABLE}" -C "${framework_root}"
     apply --check "${patch}"
@@ -20,5 +21,6 @@ function(power_rangers_patch_framework framework_root)
   if(NOT applied EQUAL 0)
     message(FATAL_ERROR "Could not apply framework patch: ${patch_error}")
   endif()
-  message(STATUS "Applied Power Rangers display-memory framework fix")
+  message(STATUS "Applied Power Rangers framework fix: ${patch_name}")
+  endforeach()
 endfunction()

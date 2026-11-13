@@ -1,0 +1,105 @@
+diff --git a/runner/src/desktop/config.h b/runner/src/desktop/config.h
+index 6c46d09..bb76b65 100644
+--- a/runner/src/desktop/config.h
++++ b/runner/src/desktop/config.h
+@@ -193,6 +193,7 @@ typedef struct Config {
+   uint8 has_keyboard_controls;
+   /* Host presentation only, excluded from every guest snapshot. */
+   bool graphics_profile, graphics_integer, hdpack_enabled, hd_diagnostics;
++  bool graphics_select_toggle; /* title opt-in: P1 Select tap instead of Start */
+   int graphics_profile_version;
+   int graphics_mode, graphics_filter;
+   unsigned hdpack_reload;
+diff --git a/runner/src/desktop/graphics_menu.c b/runner/src/desktop/graphics_menu.c
+index c094258..c3f1750 100644
+--- a/runner/src/desktop/graphics_menu.c
++++ b/runner/src/desktop/graphics_menu.c
+@@ -78,7 +78,9 @@ int GraphicsMenu_Image(const unsigned **pixels,int *width,int *height) {
+     snes_ovl_draw_text(panel,512,448,18,y,labels[i],0xffeeeeee,1);
+     snes_ovl_draw_text(panel,512,448,250,y,value,0xffffd24d,1);
+   }
+-  snes_ovl_draw_text(panel,512,448,16,376,"F6 / START (CONTROLE): ORIGINAL-HD  F4: RELOAD",0xff9bb5d9,1);
++  snes_ovl_draw_text(panel,512,448,16,376,g_config.graphics_select_toggle?
++    "F6 / SELECT: ORIGINAL-HD  F4: RELOAD":
++    "F6 / START (CONTROLE): ORIGINAL-HD  F4: RELOAD",0xff9bb5d9,1);
+   snes_ovl_draw_text(panel,512,448,16,398,"SETAS / DPAD   ENTER / A   ESC / B VOLTAR",0xff9bb5d9,1);
+   snes_ovl_draw_text(panel,512,448,16,425,HdPack_Status(),0xffd2d2d2,1);
+   *pixels=panel;*width=512;*height=448;return 1;
+diff --git a/runner/src/desktop/host_main.c b/runner/src/desktop/host_main.c
+index ccd3c6c..46bcaed 100644
+--- a/runner/src/desktop/host_main.c
++++ b/runner/src/desktop/host_main.c
+@@ -73,6 +73,7 @@
+ #include "widescreen.h"
+ #include "snes_savestate_menu.h"
+ #include "graphics_video.h"
++#include "graphics_select_tap.h"
+ #include "../hd_assets.h"
+ #include "snes_rewind.h"
+ #include "snes_overlay_draw.h"
+@@ -139,6 +140,7 @@ typedef struct GamepadInfo {
+   uint8 axis_buttons;
+   uint16 last_cmd[kGamepadBtn_Count];
+   Sint16 last_axis_x, last_axis_y;
++  GraphicsSelectTap graphics_select;
+ } GamepadInfo;
+ 
+ #if SNESRECOMP_SDL3
+@@ -5042,7 +5044,7 @@ static void SetPadButtonOrFallthrough(uint32 j, bool pressed) {
+      * shortcut on either supported player controller. F6 is the keyboard
+      * equivalent. */
+     if ((j == kKeys_Controls + 5 || j == kKeys_ControlsP2 + 5) &&
+-        pressed && g_game->graphics_profile)
++        pressed && g_game->graphics_profile && !g_config.graphics_select_toggle)
+       GraphicsVideo_Toggle();
+     uint32 m = 1u << kKbdRemap[j - kKeys_Controls];
+     g_pad_buttons = pressed ? (g_pad_buttons | m) : (g_pad_buttons & ~m);
+@@ -5075,6 +5077,21 @@ static void HandleGamepadInput(GamepadInfo *gi, int button, bool pressed) {
+     gi->last_cmd[button] = FindCmdForGamepadButton(button + gi->index * kGamepadBtn_Count, gi->modifiers);
+   if (gi->last_cmd[button] != 0)
+     SetPadButtonOrFallthrough(gi->last_cmd[button], pressed);
++  /* Only P1 drives this global shortcut. DS4Windows may expose the physical
++   * pad as P2 and its Xbox mirror as P1: handling both would toggle twice. */
++  if (g_game->graphics_profile && g_config.graphics_select_toggle && gi->index == 0) {
++    int base = ConfigSeatControlsBase(gi->index);
++    bool select = false, other = false;
++    for (int b = 0; b < kGamepadBtn_Count; ++b) {
++      if (!(gi->modifiers & (1u << b))) continue;
++      int cmd = gi->last_cmd[b];
++      if (cmd == base + 4) select = true;
++      else if (cmd < base || cmd >= base + 4) other = true;
++    }
++    bool blocked = g_overlay_modal || snes_savestate_menu_is_open() || snes_rewind_is_open();
++    if (GraphicsSelectTap_Update(&gi->graphics_select, select, other, blocked))
++      GraphicsVideo_Toggle();
++  }
+ }
+ 
+ /* [Sound] Volume (0..100) -> the mixer. The launcher's slider, the keys and
+diff --git a/runner/src/desktop/graphics_select_tap.h b/runner/src/desktop/graphics_select_tap.h
+new file mode 100644
+--- /dev/null
++++ b/runner/src/desktop/graphics_select_tap.h
+@@ -0,0 +1,22 @@
++#pragma once
++#include <stdbool.h>
++
++/* A tap fires once on release. Select combinations belong to modal menus. */
++typedef struct GraphicsSelectTap {
++  bool held, chord;
++} GraphicsSelectTap;
++
++static inline bool GraphicsSelectTap_Update(GraphicsSelectTap *tap,
++    bool held, bool other_button, bool blocked) {
++  if (held && !tap->held) {
++    tap->held = true;
++    tap->chord = other_button || blocked;
++  }
++  if (tap->held && (other_button || blocked)) tap->chord = true;
++  if (!held && tap->held) {
++    bool fire = !tap->chord;
++    tap->held = tap->chord = false;
++    return fire;
++  }
++  return false;
++}
