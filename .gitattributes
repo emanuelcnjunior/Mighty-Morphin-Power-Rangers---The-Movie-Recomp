@@ -1,0 +1,2 @@
+# git apply needs stable patch line endings on Windows checkouts.
+*.patch text eol=lf whitespace=-blank-at-eol

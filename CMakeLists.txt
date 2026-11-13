@@ -27,6 +27,9 @@ if(NOT EXISTS "${SNESRECOMP_ROOT}/runner/runner.cmake")
         "snesrecomp submodule missing at ${SNESRECOMP_ROOT}.\n"
         "Run: git submodule update --init --recursive")
 endif()
+include("${CMAKE_SOURCE_DIR}/cmake/framework_patches.cmake")
+power_rangers_patch_framework("${SNESRECOMP_ROOT}")
+
 # Mod packages are part of every project, not an option. The launcher's Mods
 # page, the .snesmod loader, the trusted-plugin registry and netplay's mod-set
 # gate all hang off this one switch; a build without it cannot exchange mods

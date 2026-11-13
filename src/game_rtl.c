@@ -35,9 +35,14 @@
 #include "game_rtl.h"
 
 #include "beam_frame_driver.h"
+#include "snes/ppu.h"
 
 void GameRunOneFrame(void)
 {
+    /* The bottom forced-blank interval uploads the next animation's OAM and
+     * tiles. Draw the coherent copy captured at this field's first unblank,
+     * before that next upload can mix poses, flips and tile data. */
+    ppu_rasterLatchDisplayMemory(true);
     snes_beam_frame_driver_run_frame();
 }
 

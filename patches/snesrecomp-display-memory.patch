@@ -1,0 +1,91 @@
+diff --git a/runner/src/snes/ppu.c b/runner/src/snes/ppu.c
+index 530b5eb..a5595e3 100644
+--- a/runner/src/snes/ppu.c
++++ b/runner/src/snes/ppu.c
+@@ -3219,6 +3219,8 @@ void ppu_set_vram_write_log_hook(PpuVramWriteLogHook hook) {
+ typedef struct { uint16_t key; uint16_t reg; uint8_t val; } PpuRasterEntry;
+ typedef struct {
+   uint8_t regs[PPU_SAVESTATE_REGS_SIZE];   /* inidisp..cgwsel at field start */
++  uint8_t displayMemory[PPU_SAVESTATE_MEM_SIZE];
++  bool displayMemoryLatched;
+   uint8_t scrollPrev, scrollPrev2, m7prev;
+   uint8_t hdmaen;
+   int count;
+@@ -3234,6 +3236,13 @@ static const PpuRasterField *s_raster_render;
+ static int s_raster_next;
+ static uint8_t s_raster_hdmaen;
+ static int s_raster_hdmaen_pending;
++static bool s_raster_latch_display_memory;
++static bool s_raster_display_memory_swapped;
++static uint8_t s_raster_live_memory[PPU_SAVESTATE_MEM_SIZE];
++
++void ppu_rasterLatchDisplayMemory(bool enabled) {
++  s_raster_latch_display_memory = enabled;
++}
+ static struct {
+   uint8_t oamAdr, oamInHigh, oamSecondWrite, oamBuffer;
+ } s_raster_port;
+@@ -3314,6 +3323,9 @@ static int raster_reg_journaled(uint16_t reg) {
+ 
+ static void raster_snapshot(PpuRasterField *f, const Ppu *ppu) {
+   memcpy(f->regs, &ppu->inidisp, PPU_SAVESTATE_REGS_SIZE);
++  if (s_raster_latch_display_memory)
++    memcpy(f->displayMemory, ppu->cgram, PPU_SAVESTATE_MEM_SIZE);
++  f->displayMemoryLatched = false;
+   f->scrollPrev = ppu->scrollPrev;
+   f->scrollPrev2 = ppu->scrollPrev2;
+   f->m7prev = ppu->m7prev;
+@@ -3358,6 +3370,15 @@ void ppu_rasterRecord(uint16_t reg, uint16_t line, uint8_t val) {
+   if (g_ppu_wlog_src == kPpuWlogReplay)
+     return;
+   f = &s_field[s_raster_cur];
++  /* The CPU can replace OAM/VRAM below the playfield, before the field ends.
++   * Those uploads are for the next field. Keep a coherent display copy after
++   * this field's uploads finish, including uploads in its forced-blank top
++   * border. Replays must never capture memory or advance the guest ports. */
++  if (s_raster_latch_display_memory && reg == 0x2100 && !(val & 0x80) &&
++      !f->displayMemoryLatched) {
++    memcpy(f->displayMemory, raster_machine_ppu()->cgram, PPU_SAVESTATE_MEM_SIZE);
++    f->displayMemoryLatched = true;
++  }
+   if (f->count >= PPU_RASTER_MAX) {
+     f->dropped++;
+     return;
+@@ -3390,6 +3411,12 @@ void ppu_rasterRenderBegin(Ppu *ppu) {
+   s_raster_port.oamInHigh = ppu->oamInHigh;
+   s_raster_port.oamSecondWrite = ppu->oamSecondWrite;
+   s_raster_port.oamBuffer = ppu->oamBuffer;
++  s_raster_display_memory_swapped =
++      s_raster_latch_display_memory && !g_ppu_scanout_latch_bypass;
++  if (s_raster_display_memory_swapped) {
++    memcpy(s_raster_live_memory, ppu->cgram, PPU_SAVESTATE_MEM_SIZE);
++    memcpy(ppu->cgram, f->displayMemory, PPU_SAVESTATE_MEM_SIZE);
++  }
+   memcpy(&ppu->inidisp, f->regs, PPU_SAVESTATE_REGS_SIZE);
+   ppu->scrollPrev = f->scrollPrev;
+   ppu->scrollPrev2 = f->scrollPrev2;
+@@ -3453,6 +3480,10 @@ void ppu_rasterRenderEnd(Ppu *ppu) {
+   ppu->oamInHigh = s_raster_port.oamInHigh;
+   ppu->oamSecondWrite = s_raster_port.oamSecondWrite;
+   ppu->oamBuffer = s_raster_port.oamBuffer;
++  if (s_raster_display_memory_swapped) {
++    memcpy(ppu->cgram, s_raster_live_memory, PPU_SAVESTATE_MEM_SIZE);
++    s_raster_display_memory_swapped = false;
++  }
+ }
+ 
+ /* Snapshot of the journal as the renderer will consume it, for the debug
+diff --git a/runner/src/snes/ppu.h b/runner/src/snes/ppu.h
+index a3c00fd..a757db1 100644
+--- a/runner/src/snes/ppu.h
++++ b/runner/src/snes/ppu.h
+@@ -607,6 +607,9 @@ void ppu_set_vram_write_log_hook(PpuVramWriteLogHook hook);
+  * register write with the beam line. A host arms it with ppu_rasterBegin and
+  * brackets its render loop with RenderBegin / ApplyLine per line / RenderEnd. */
+ void ppu_rasterBegin(Ppu *ppu);
++/* Opt-in for frame hosts whose guest prepares next-field graphics below the
++ * visible playfield. Freeze display memory at the first unblank of each field. */
++void ppu_rasterLatchDisplayMemory(bool enabled);
+ void ppu_rasterRenderBegin(Ppu *ppu);
+ void ppu_rasterRenderEnd(Ppu *ppu);
+ int  ppu_rasterTakeHdmaen(uint8_t *out);

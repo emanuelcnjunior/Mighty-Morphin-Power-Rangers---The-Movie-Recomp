@@ -16,6 +16,7 @@
 /keybinds.ini
 /config.ini
 /input.ini
+/mods/preloaded/state.toml
 /last_run_report.json
 /post_mortem*.json
 /crash*.json
