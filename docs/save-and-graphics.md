@@ -49,6 +49,9 @@ cópia do arquivo real, sem alterar o original.
 - **F6 / Select (Share) do jogador 1:** alternar Original/HD. A troca acontece
   ao soltar um toque isolado no Select; Select+R1/L3/R3 continua reservado aos
   menus, sem alterar o visual. Start mantém somente sua função original.
+  **Problema relatado:** Select não alternou o HD no DS4 do usuário. Use F6 ou
+  o painel F10; a lógica de toque passou no teste unitário, mas isso não
+  confirmou o funcionamento do atalho físico.
 - **F10:** painel gráfico: Original/HD, filtro, resolução, escala inteira,
   proporção, VSync, tela cheia e pacote HD.
 - **Alt+Enter:** alternar janela/tela cheia durante o jogo.

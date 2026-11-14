@@ -1,5 +1,22 @@
 # Validation log
 
+## 2026-11-13 - Windows installer
+
+- Inno Setup 6.7.4 builds a per-user x64 installer without a bundled ROM.
+  The wizard requires the supported USA ROM and verifies its SHA-256 before
+  installation; the executable verifies it again before importing user data.
+- Twelve ROM checks passed, including Unicode paths, renamed files, corrupt
+  and wrong-size files, and preservation of the last valid imported ROM.
+- Isolated install, desktop/Start Menu shortcut icon checks, installed game
+  startup with video/audio/fullscreen, uninstall and reinstall passed.
+  Saves and existing configuration survived reinstall and uninstall.
+- The retail build passed tools/validate_runtime.py, including deterministic
+  save/load, previous desktop save compatibility, GPU presentation, HD pack
+  handling and component tests. Evidence is under the ignored build-installer
+  directory.
+- The user reports Select does not switch HD on the physical DS4. This remains
+  unresolved; F6 and F10 are the documented alternatives.
+
 ## 2026-11-13 - Version 0.2.0 closure
 
 - User approved closing the version, requested fullscreen startup and a Select

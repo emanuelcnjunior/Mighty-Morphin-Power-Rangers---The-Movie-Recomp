@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 project(MightyMorphinPowerRangersTheMovieSNESRecomp C CXX)
 
 set(CMAKE_C_STANDARD 11)
+option(POWER_RANGERS_RETAIL_WINDOWS "Build the end-user ROM import flow" OFF)
 set(POWER_RANGERS_TEST_ENTRY "" CACHE STRING "Private runtime probe: save, gpu, or packs")
 set_property(CACHE POWER_RANGERS_TEST_ENTRY PROPERTY STRINGS "" save gpu packs)
 
@@ -128,7 +129,9 @@ snesrecomp_target_desktop_host(MightyMorphinPowerRangersTheMovieSNESRecomp)
 # rom.cfg (the ROM the wizard set this project up from; git-ignored) is
 # staged beside the executable when none is there yet, so the first launch
 # opens on that dump rather than asking for one.
-snesrecomp_target_rom_cache(MightyMorphinPowerRangersTheMovieSNESRecomp)
+if(NOT POWER_RANGERS_RETAIL_WINDOWS)
+    snesrecomp_target_rom_cache(MightyMorphinPowerRangersTheMovieSNESRecomp)
+endif()
 
 # Shared Dear ImGui pre-boot launcher (ROM picker, verification, display /
 # audio / input settings). Self-contained: it brings its own ImGui, GL link and
@@ -160,3 +163,28 @@ target_include_directories(MightyMorphinPowerRangersTheMovieSNESRecomp PRIVATE
 
 # Netplay is not built into this target.
 # No multitap: two seats, one controller per port.
+if(WIN32)
+    enable_language(RC)
+    string(REPLACE "." "," POWER_RANGERS_RESOURCE_VERSION "${GAME_RELEASE_VERSION}")
+    configure_file(installer/power-rangers.rc.in
+        "${CMAKE_CURRENT_BINARY_DIR}/power-rangers.rc" @ONLY)
+    target_sources(MightyMorphinPowerRangersTheMovieSNESRecomp PRIVATE
+        "${CMAKE_CURRENT_BINARY_DIR}/power-rangers.rc")
+endif()
+if(WIN32 AND POWER_RANGERS_RETAIL_WINDOWS)
+    file(STRINGS "${CMAKE_SOURCE_DIR}/rom_identity.txt" _rom_size_line REGEX "^rom_size[ \t]*=")
+    string(REGEX MATCH "=[ \t]*([0-9]+)" _rom_size_match "${_rom_size_line}")
+    set(_rom_size "${CMAKE_MATCH_1}")
+    if(NOT _rom_size MATCHES "^[0-9]+$")
+        message(FATAL_ERROR "rom_identity.txt must define rom_size")
+    endif()
+    target_sources(MightyMorphinPowerRangersTheMovieSNESRecomp PRIVATE src/windows_rom.c)
+    target_compile_definitions(MightyMorphinPowerRangersTheMovieSNESRecomp PRIVATE
+        POWER_RANGERS_RETAIL_WINDOWS=1 POWER_RANGERS_ROM_SIZE=${_rom_size})
+    if(MSVC)
+        set_source_files_properties(src/windows_rom.c PROPERTIES COMPILE_OPTIONS /utf-8)
+        target_link_options(MightyMorphinPowerRangersTheMovieSNESRecomp PRIVATE
+            /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup)
+    endif()
+    target_link_libraries(MightyMorphinPowerRangersTheMovieSNESRecomp PRIVATE comdlg32 shell32)
+endif()

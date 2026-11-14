@@ -18,6 +18,20 @@
 #endif
 
 static char s_pack_dir[512];
+static char s_user_dir[1024];
+
+const char kGameDefaultConfig[] =
+    "[General]\nAutosave = 0\n"
+    "[Graphics]\nGraphicsProfileVersion = 4\nGraphicsMode = 1\n"
+    "GraphicsFilter = 1\nNewRenderer = 1\nNoSpriteLimits = 1\n"
+    "Fullscreen = 1\nWindowScale = 3\nIgnoreAspectRatio = 0\n"
+    "DisplayAspect = 0\nIntegerScale = 0\nVSync = 1\n"
+    "[Sound]\nEnableAudio = 1\nVolume = 100\n"
+    "[KeyMap]\nQuickSave = F1\nQuickLoad = F2\nSaveStateMenu = F11\n"
+    "GraphicsToggle = F6\nGraphicsMenu = F10\nHDReload = F4\nOpenLauncher = Ctrl+l\n"
+    "[GamepadMap]\nEnableGamepad1 = true\nEnableGamepad2 = true\n";
+
+const char *GameUserDataRoot(void) { return s_user_dir; }
 
 static bool ensure_directory(const char *path) {
 #ifdef _WIN32
@@ -63,6 +77,7 @@ bool GamePrepareUserData(void) {
          pack_len > 0 && (size_t)pack_len < sizeof(s_pack_dir) &&
          ensure_directory(saves) && ensure_directory(s_pack_dir);
     if (ok) {
+        snprintf(s_user_dir, sizeof(s_user_dir), "%s", root);
         RtlSetSaveRoot(saves);
         RtlSetQuickSaveRoot(saves);
         fprintf(stderr, "[Power Rangers] Saves: %s\n", saves);

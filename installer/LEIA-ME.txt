@@ -1,0 +1,27 @@
+MIGHTY MORPHIN POWER RANGERS - THE MOVIE PC RECOMP
+
+Este programa nao inclui a ROM. O instalador pede sua propria ROM USA original
+de SNES, sem cabecalho ou patches, e verifica o conteudo antes de importar.
+
+CONTROLES
+F1 ou L2: Quick Save
+F2 ou R2: Quick Load
+F11 ou Share+R1: lista de saves
+F6: alternar Original/HD
+F10: configuracoes graficas
+Alt+Enter: alternar janela/tela cheia
+
+O jogo abre em tela cheia. O modo HD usa filtros de apresentacao; pacotes de
+texturas redesenhadas sao opcionais e nao acompanham esta distribuicao.
+Se Select nao alternar o HD no seu controle, use F6 ou F10.
+
+DADOS DO USUARIO
+%LOCALAPPDATA%\PowerRangersMovieRecomp\
+Saves: subpasta saves
+Texturas externas: subpasta hd-packs
+
+Desinstalar preserva sua ROM, configuracoes e saves. Atualizacoes do runtime
+podem exigir novos estados; mantenha uma copia dos seus saves importantes.
+
+Projeto de fas, nao oficial e nao comercial. Licencas e atribuicoes acompanham
+o programa na pasta licenses.

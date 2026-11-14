@@ -46,6 +46,9 @@ static bool valid_header(const GameSaveHeader *h) {
      * Keep its real user saves readable on the same compiler/ABI. */
     supported_schema |= !memcmp(h->schema,
         "f55fd3a93e93b2bef974e1224c1456810f9eb916b5e54696c38a0aa9a7a0c7c5", 65);
+    /* 0.2.0 desktop release: packaging/ROM import changes only host startup. */
+    supported_schema |= !memcmp(h->schema,
+        "7809dc8883801d83e98c4d102e2e7c6b155ef0e9cc978aa6645a1482447db452", 65);
 #endif
     return h->magic == 0x4d525750 && h->version == 1 &&
         h->pc <= 0xffffff && cpu_pc24_resumable(h->pc) && h->wai <= 1 &&
