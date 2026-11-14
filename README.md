@@ -1,111 +1,233 @@
-# Mighty Morphin Power Rangers: The Movie — recompilation
+﻿<div align="center">
+
+<img src="images/logo-removebg-preview.png" alt="Mighty Morphin Power Rangers: The Movie" width="600">
+
+# ⚡ It's Morphin Time!
+
+**Mighty Morphin Power Rangers: The Movie · PC Recomp**
+
+O clássico de Super Nintendo em um projeto de recompilação para PC.<br>
+Save states, controles configuráveis e apresentação Original/HD no Windows.
+
+<p>
+<img src="https://img.shields.io/badge/Windows-x64-0078D4?style=for-the-badge" alt="Windows x64">
+<img src="https://img.shields.io/badge/Versão-0.2.0-D62828?style=for-the-badge" alt="Versão 0.2.0">
+<img src="https://img.shields.io/badge/ROM-USA%20SNES-E8B343?style=for-the-badge" alt="Requer ROM USA SNES">
+<img src="https://img.shields.io/badge/Status-Em%20desenvolvimento-7657C5?style=for-the-badge" alt="Em desenvolvimento">
+</p>
+
+**[⬇ Downloads](https://github.com/emanuelcnjunior/Mighty-Morphin-Power-Rangers---The-Movie-Recomp/releases)** · **[🎮 Como jogar](#-como-jogar)** · **[📸 Galeria](#-galeria)** · **[⌨ Controles](#-controles)** · **[🛠 Compilar](#-para-desenvolvedores)**
 
 <a href="https://recomplauncher.com"><picture><source media="(prefers-color-scheme: dark)" srcset="https://recomplauncher.com/assets/press/launcher/badge-light.svg"><img alt="Get it on RecompLauncher" src="https://recomplauncher.com/assets/press/launcher/badge-dark.svg" height="48"></picture></a>
 
-Para jogar no Windows, extraia o pacote `windows-x64.zip` e abra o executável,
-ou adicione a pasta ao RecompLauncher. Selecione sua ROM USA original `.sfc`
-ou `.smc`, sem cabeçalho ou patches. Nenhuma ROM acompanha o programa.
-Configurações e saves ficam em `%LOCALAPPDATA%\PowerRangersMovieRecomp\`.
-Veja [a integração com RecompLauncher](docs/recomplauncher.md).
+<br><br>
+<img src="images/plano_fundo.jpg" alt="Arte do Centro de Comando com raios dourados e azuis" width="100%">
+<br>
+<sub>Arte de apresentação do projeto.</sub>
 
-Clean-room reimplementation work for the US SNES release. The original ROM is
-used only as a local analysis input and must never be committed or distributed.
+</div>
 
-## Current status
+> **Traga sua própria ROM.** É necessária uma cópia compatível da edição **USA de SNES**, sem cabeçalho de copiador e sem patches. O conteúdo é verificado por **SHA-256**. Nenhuma ROM ou pacote de texturas extraído do jogo acompanha o programa.
 
-- ROM identity and internal SNES header validated.
-- LoROM address conversion and reset-vector inspection are automated.
-- Official SNESRecomp scaffold integrated with the same framework pins used by
-  the TMNT IV reference port.
-- Initial native analysis generated 24 exact AOT variants from four roots in
-  bank `$00` (70 control-flow edges, no LLE-only variants in this first slice).
-- Windows x64 Release build succeeds with MSVC 19.44, CMake 4.4.4, SDL3 3.4.10,
-  and the shared `recomp-ui` launcher.
-- Interactive boot-to-title validation passed on Windows: video, audio, and
-  keyboard input all work. Full gameplay correctness is not yet established.
+## 🎮 Como jogar
 
-Validated source image:
+### 1 · Baixe a edição Windows
 
-| Property | Value |
-| --- | --- |
-| File | `Mighty Morphin Power Rangers - The Movie (USA).sfc` |
-| Size | 1,572,864 bytes (12 Mbit) |
-| SHA-256 | `c706b70097c679f6f0ced6f77a30620807d0b2555fc3c683c0ec2fc791176039` |
-| Mapping | LoROM (`$20`) |
-| Reset vector | `$00:8000` |
-| SRAM | none declared |
+Abra a página de **[Releases](https://github.com/emanuelcnjunior/Mighty-Morphin-Power-Rangers---The-Movie-Recomp/releases)** e escolha o instalador Windows. Na v0.2.0, o arquivo se chama:
 
-## Validate the local ROM
+```text
+Power-Rangers-The-Movie-PC-Setup-v0.2.0.exe
+```
 
-Place the ROM anywhere under `rom/`, then run:
+O pacote para jogadores inclui o runtime necessário. **Você não precisa instalar Python, Rust, CMake ou Visual Studio para jogar.**
+
+### 2 · Selecione sua ROM USA
+
+Execute o instalador e indique sua ROM original compatível. Após a verificação, ela é importada para a pasta de dados do usuário. Abra o jogo pelo atalho criado pelo instalador.
+
+### 3 · Prepare seu controle e entre na ação
+
+O jogo abre em tela cheia. Use o launcher para configurar os controles e **F10** para ajustar a apresentação durante a partida. Confira os atalhos abaixo para salvar e retomar seu progresso.
+
+📖 **[Guia completo do instalador](installer/README.md)**
+
+### Pelo RecompLauncher
+
+A integração adicionada ao repositório permite selecionar a ROM, verificá-la com o importador existente e iniciar diretamente o jogo. Também expõe **volume, áudio e V-Sync** no launcher.
+
+O empacotamento gera um ZIP `windows-x64` com `recomplauncher.json` ao lado do executável. Quando esse pacote estiver disponível em uma release, extraia-o e adicione a pasta em **Settings → Developers → Add a build** para testar localmente.
+
+> A integração ainda precisa de validação de ponta a ponta dentro do aplicativo RecompLauncher antes de ser anunciada como testada.
+
+🔗 **[Integração, validação e publicação](docs/recomplauncher.md)**
+
+## ✨ Recursos do projeto
+
+| 💾 Salve sua jornada | 🎨 Escolha a apresentação | 🎮 Jogue do seu jeito |
+| :--- | :--- | :--- |
+| Cinco slots manuais de save state | Alternância entre Original e HD | Launcher com configuração de controles |
+| Quick Save separado dos slots | Filtros Nearest, Sharp e Scale2x | Atalhos de teclado e gamepad |
+| Navegador de saves durante o jogo | Tela cheia e pacotes de texturas externos | Acesso ao launcher durante a partida |
+
+**Sobre o modo HD:** os filtros funcionam sem um pacote de texturas. Arte redesenhada do jogo não está incluída.
+
+📖 **[Save states, gráficos e pacotes HD](docs/save-and-graphics.md)**
+
+## 📸 Galeria
+
+<div align="center">
+<table>
+<tr>
+<td width="50%" align="center"><img src="images/screenshot.png" alt="Rangers Vermelho e Branco enfrentando um inimigo" width="100%"><br><sub>⚡ Rangers em ação</sub></td>
+<td width="50%" align="center"><img src="images/screenshot2.png" alt="Ranger Branco em combate em uma loja" width="100%"><br><sub>🥊 Combate em Angel Grove</sub></td>
+</tr>
+<tr>
+<td width="50%" align="center"><img src="images/screenshot3.jpg" alt="Ranger Azul em combate; captura com marca Arkade" width="100%"><br><sub>🔵 Ranger Azul</sub></td>
+<td width="50%" align="center"><img src="images/screenshot4.jpg" alt="Rangers enfrentando Ivan Ooze" width="100%"><br><sub>🟣 Confronto com Ivan Ooze</sub></td>
+</tr>
+</table>
+
+<sub>Imagens de referência do jogo fornecidas para a galeria. Não representam uma validação dessas cenas no recomp. A terceira imagem mantém a marca Arkade presente no arquivo original.</sub>
+</div>
+
+## ⌨ Controles
+
+| Ação | Teclado | Controle¹ |
+| :--- | :---: | :---: |
+| Salvar rápido | **F1** | **L2** |
+| Carregar save rápido | **F2** | **R2** |
+| Abrir navegador de saves | **F11** | **Share + R1** |
+| Alternar Original / HD | **F6** | — |
+| Abrir configurações gráficas | **F10** | — |
+| Alternar janela / tela cheia | **Alt + Enter** | — |
+| Abrir launcher durante o jogo | **Ctrl + L** | **Share + L3** |
+
+¹ Nomes na convenção PlayStation. Consulte o launcher para configurar suas entradas.
+
+> **Atalho Select em investigação:** foi implementado um toque em Select para alternar HD, mas houve relato de falha com DualShock 4. Use **F6** ou **F10** enquanto esse comportamento é investigado.
+
+## 📁 Seus dados, seu progresso
+
+A edição Windows mantém os dados pessoais separados dos arquivos do programa:
+
+```text
+%LOCALAPPDATA%\PowerRangersMovieRecomp\
+├── config.ini      Configurações
+├── saves\          Save states e Quick Save
+├── hd-packs\       Pacotes de texturas externos
+└── …               ROM importada e demais dados locais
+```
+
+O instalador preserva a ROM importada, as configurações e os saves ao desinstalar. A integração com RecompLauncher usa a mesma pasta e não altera o formato dos saves. Seu perfil de backup aponta para `saves`, sem incluir a ROM.
+
+## 🚧 Estado do projeto
+
+Projeto **em desenvolvimento**, com build Windows x64 e validação interativa até a tela de título: vídeo, áudio e teclado funcionaram nos testes registrados. A correção do jogo inteiro ainda não foi estabelecida.
+
+| Verificação | Situação |
+| :--- | :--- |
+| Identidade da ROM e cabeçalho SNES | Validados |
+| Build Windows x64 Release | Concluído |
+| Boot até a tela de título | Validado interativamente |
+| Verificador e importador de ROM | 12 casos de teste aprovados |
+| Perfil RecompLauncher | Validado contra o schema oficial |
+| Easy Setup dentro do aplicativo RecompLauncher | Validação manual pendente |
+| Compatibilidade do início ao fim do jogo | Ainda não estabelecida |
+
+Encontrou um problema? **[Abra uma issue](https://github.com/emanuelcnjunior/Mighty-Morphin-Power-Rangers---The-Movie-Recomp/issues)** com a versão, seu sistema, passos para reproduzir e relatórios disponíveis. Não anexe sua ROM.
+
+## 🛠 Para desenvolvedores
+
+<details>
+<summary><strong>🔍 ROM compatível e análise local</strong></summary>
+
+<br>
+
+A identidade central está em [`rom_identity.txt`](rom_identity.txt).
+
+| Propriedade | Valor |
+| :--- | :--- |
+| Edição | USA · Super Nintendo |
+| Nome de referência | `Mighty Morphin Power Rangers - The Movie (USA).sfc` |
+| Tamanho | 1.572.864 bytes · 12 Mbit |
+| Mapeamento | LoROM (`$20`) |
+| Vetor de reset | `$00:8000` |
+| SRAM de bateria | Não declarada pelo cartucho USA |
+
+**SHA-256 da imagem sem cabeçalho:**
+
+```text
+c706b70097c679f6f0ced6f77a30620807d0b2555fc3c683c0ec2fc791176039
+```
+
+Para análise, coloque sua ROM local em `rom/` e execute:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\tools\analyze-rom.ps1
 ```
 
-The script refuses unexpected hashes by default. Pass `-AllowUnknownHash` only
-when deliberately investigating another dump.
+O script recusa hashes inesperados. `-AllowUnknownHash` destina-se apenas à investigação deliberada de outro dump.
 
-## Generate and build
+</details>
+
+<details>
+<summary><strong>⚙️ Gerar e compilar no Windows</strong></summary>
+
+<br>
+
+Requer o ambiente de desenvolvimento do projeto, Visual Studio 2022 com C++ x64, CMake e sua própria ROM compatível.
 
 ```powershell
+git submodule update --init --recursive
+
 & 'C:\Program Files\Git\bin\bash.exe' tools/regen.sh --rom `
-  'C:/path/to/Mighty Morphin Power Rangers - The Movie (USA).sfc'
+  'C:/caminho/Mighty Morphin Power Rangers - The Movie (USA).sfc'
 
 cmake -S . -B build -G 'Visual Studio 17 2022' -A x64
 cmake --build build --config Release --parallel 4
 ```
 
-Generated ROM-derived C under `src/gen/` is intentionally ignored.
+O código derivado da ROM em `src/gen/` é ignorado pelo Git e deve permanecer local.
 
-## Save/load and HD presentation
+Para gerar a distribuição retail Windows com instalador e ZIP:
 
-For a ready-to-play Windows installer which asks for the user's own USA ROM,
-see [installer instructions](installer/README.md). No ROM is bundled. The
-installer and shortcuts use the generated Red Ranger icon.
-
-The desktop build integrates five manual save-state slots plus a separate Quick
-Save, guarded full-machine restoration, an Original/HD GPU presenter, Scale2x,
-Sharp and Nearest filters, fullscreen controls and optional external texture
-packs. The sprite display-memory fix is retained.
-
-- F1 / L2: Quick Save. F2 / R2: Quick Load.
-- F11 / Share+R1: save-state browser.
-- F6: Original/HD. F10: graphics settings. Alt+Enter: fullscreen.
-- Ctrl+L / Share+L3: in-game launcher.
-
-On Windows saves live in `%LOCALAPPDATA%\PowerRangersMovieRecomp\saves\`.
-Version 0.2.0 starts fullscreen. A Select tap shortcut was implemented, but the
-user reported that it did not toggle HD on their DS4; use F6/F10 while that
-shortcut remains under investigation.
-HD filtering works without a texture pack; redrawn game artwork is not bundled.
-See [save/load and graphics guide](docs/save-and-graphics.md) for controls,
-compatibility, texture-pack authoring and reproducible validation.
-
-## Roadmap
-
-1. Decode the reset path and hardware initialization.
-2. Identify interrupt handlers, bank boundaries, and data/code regions.
-3. Build a symbol map and translate one subsystem at a time.
-4. Add deterministic tests against captured original-game behavior.
-5. Add a portable runtime and replace extracted assets with runtime-loaded,
-   user-supplied ROM data where required.
-
-## External components
-
-The launcher reference is Emanuel's `recomp-ui` fork. The TMNT-specific branch
-adds SNES quick-save and quick-load bindings and is the preferred integration
-baseline:
-
-```text
-https://github.com/emanuelcnjunior/recomp-ui.git
-branch: tmnt4-save-hotkeys
+```powershell
+powershell -ExecutionPolicy Bypass -File installer/build.ps1
 ```
 
-`recomp-ui` supplies the launcher, settings UI, ROM selection/verification,
-controller configuration, and runtime-menu frontend. It does **not** translate
-65C816 code or provide the SNES execution/runtime core. Those must come from
-the corresponding SNES recompilation toolchain and game-port repository.
+Esse fluxo também requer Inno Setup. `scripts/package_release.sh` mantém o fluxo separado dos antigos setup packs, que recompilam localmente.
 
-This repository intentionally contains no copyrighted ROM bytes or extracted
-assets.
+📖 [Empacotamento Windows](installer/README.md) · [Checklist de publicação RecompLauncher](docs/recomplauncher.md)
+
+</details>
+
+<details>
+<summary><strong>🧩 Componentes e próximos passos</strong></summary>
+
+<br>
+
+- **SNESRecomp:** toolchain e runtime usados pelo projeto.
+- **[recomp-ui](https://github.com/emanuelcnjunior/recomp-ui):** launcher, seleção e verificação de ROM, controles e configurações. A referência de integração é a branch `tmnt4-save-hotkeys`.
+- **SDL3:** integração desktop para janela, áudio e controles.
+
+A análise nativa inicial gerou 24 variantes AOT exatas a partir de quatro raízes no banco `$00`, com 70 arestas de fluxo de controle. Esse resultado inicial não comprova compatibilidade do jogo inteiro.
+
+Os próximos passos incluem ampliar a validação determinística, investigar o atalho Select no DS4, testar Easy Setup dentro do RecompLauncher e melhorar a distribuição para outras plataformas. Modo portátil, importação de ROM em ZIP e conquistas estão entre as melhorias documentadas.
+
+</details>
+
+## 🤝 Créditos e licença
+
+Projeto mantido por **[Emanuel](https://github.com/emanuelcnjunior)**, com base no SNESRecomp e no `recomp-ui`. Consulte a [licença do projeto](LICENSE) e as licenças dos componentes para os termos aplicáveis.
+
+Projeto de fãs, sem afiliação oficial aos detentores de Power Rangers. As marcas e o jogo original pertencem aos seus respectivos titulares. O jogador deve fornecer sua própria cópia compatível; ROMs, chaves e assets extraídos do jogo não são distribuídos com o programa.
+
+<div align="center">
+<br>
+<img src="images/icon.jpg" alt="Emblema dourado do Ranger na arte do projeto" width="110">
+
+**Go Go Power Rangers! ⚡**
+
+[Downloads](https://github.com/emanuelcnjunior/Mighty-Morphin-Power-Rangers---The-Movie-Recomp/releases) · [Reportar problema](https://github.com/emanuelcnjunior/Mighty-Morphin-Power-Rangers---The-Movie-Recomp/issues) · [Código-fonte](https://github.com/emanuelcnjunior/Mighty-Morphin-Power-Rangers---The-Movie-Recomp)
+
+</div>
