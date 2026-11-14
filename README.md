@@ -21,7 +21,7 @@ Save states, controles configuráveis e apresentação Original/HD no Windows.
 <a href="https://recomplauncher.com"><picture><source media="(prefers-color-scheme: dark)" srcset="https://recomplauncher.com/assets/press/launcher/badge-light.svg"><img alt="Get it on RecompLauncher" src="https://recomplauncher.com/assets/press/launcher/badge-dark.svg" height="48"></picture></a>
 
 <br><br>
-<img src="images/plano_fundo.jpg" alt="Arte do Centro de Comando com raios dourados e azuis" width="100%">
+<img src="images/plano_fundo1.jpg" alt="Arte de apresentação do projeto Power Rangers" width="100%">
 <br>
 <sub>Arte de apresentação do projeto.</sub>
 
@@ -224,7 +224,7 @@ Projeto de fãs, sem afiliação oficial aos detentores de Power Rangers. As mar
 
 <div align="center">
 <br>
-<img src="images/icon.jpg" alt="Emblema dourado do Ranger na arte do projeto" width="110">
+<img src="images/icon_1.jpg" alt="Ícone do projeto Power Rangers" width="110">
 
 **Go Go Power Rangers! ⚡**
 
