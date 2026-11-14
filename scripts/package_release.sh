@@ -58,7 +58,7 @@ ROM_CRC32="$(python3 "$IDENTITY_TOOL" rom_identity.txt --get expected_crc32)"
 # mods/ is the catalog the build stages beside the executable, and the package
 # a netplay host transfers to a guest. Add --runtime-dir <name> for any other
 # directory the game loads exe-relative (translations, ...).
-exec bash "$IMPL" \
+bash "$IMPL" \
   --runtime-dir mods \
   --build-dir "$BUILD_DIR" \
   --artifact "$PLATFORM" \
@@ -69,3 +69,7 @@ exec bash "$IMPL" \
   --rom-sha256 "$ROM_SHA256" \
   --rom-crc32 "$ROM_CRC32" \
   "${EXTRA[@]+"${EXTRA[@]}"}"
+
+# Setup hosts need their own ROM picker and local rebuild wizard. Never ship
+# the retail Windows import/settings profile in these older setup packs.
+python3 scripts/package_launcher_profile.py "dist/mightymorphinpowerrangersthemovie-${RELEASE_VERSION:-$(tr -d '[:space:]' < VERSION)}-${PLATFORM}.zip"

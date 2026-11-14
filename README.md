@@ -1,5 +1,13 @@
 # Mighty Morphin Power Rangers: The Movie — recompilation
 
+<a href="https://recomplauncher.com"><picture><source media="(prefers-color-scheme: dark)" srcset="https://recomplauncher.com/assets/press/launcher/badge-light.svg"><img alt="Get it on RecompLauncher" src="https://recomplauncher.com/assets/press/launcher/badge-dark.svg" height="48"></picture></a>
+
+Para jogar no Windows, extraia o pacote `windows-x64.zip` e abra o executável,
+ou adicione a pasta ao RecompLauncher. Selecione sua ROM USA original `.sfc`
+ou `.smc`, sem cabeçalho ou patches. Nenhuma ROM acompanha o programa.
+Configurações e saves ficam em `%LOCALAPPDATA%\PowerRangersMovieRecomp\`.
+Veja [a integração com RecompLauncher](docs/recomplauncher.md).
+
 Clean-room reimplementation work for the US SNES release. The original ROM is
 used only as a local analysis input and must never be committed or distributed.
 

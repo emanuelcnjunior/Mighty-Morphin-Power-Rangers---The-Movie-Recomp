@@ -43,6 +43,7 @@ if (!(Test-Path $exe)) { throw 'Release executable missing.' }
 $stage = Join-Path $root ('dist/stage-' + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Force $stage | Out-Null
 Copy-Item -LiteralPath $exe -Destination $stage
+Copy-Item -LiteralPath (Join-Path $root 'recomplauncher.json') -Destination $stage
 Copy-Item installer/LEIA-ME.txt (Join-Path $stage 'LEIA-ME.txt')
 $assets = Join-Path (Split-Path $exe) 'assets'
 $required = @('fonts/LatoLatin-Regular.ttf','fonts/LatoLatin-Bold.ttf',
@@ -99,6 +100,10 @@ $manifest = Get-ChildItem $stage -File -Recurse | ForEach-Object {
   sha256=(Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash }
 }
 $manifest | ConvertTo-Json | Set-Content -Encoding UTF8 (Join-Path $stage 'manifest.json')
+$portable = Join-Path $root "dist/Power-Rangers-The-Movie-PC-v$version-windows-x64.zip"
+Compress-Archive -Path (Join-Path $stage '*') -DestinationPath $portable -Force
+(Get-FileHash -LiteralPath $portable -Algorithm SHA256).Hash + '  ' + (Split-Path $portable -Leaf) |
+ Set-Content -Encoding ASCII ($portable + '.sha256')
 Invoke-Native $Iscc @("/DStageDir=$stage", "/DOutputDir=$(Join-Path $root 'dist')",
  "/DReleaseVersion=$version", "/DRomSHA256=$($identity['expected_sha256'])",
  "/DRomFileName=$($identity['rom_file'])", 'installer/power-rangers.iss')

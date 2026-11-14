@@ -1,0 +1,142 @@
+{
+  "$schema": "https://recomplauncher.com/schema/recomplauncher.json",
+  "format": 1,
+  "name": "Mighty Morphin Power Rangers: The Movie",
+  "repo": "emanuelcnjunior/Mighty-Morphin-Power-Rangers---The-Movie-Recomp",
+  "inputs": [
+    {
+      "id": "rom",
+      "label": "Your original USA SNES ROM (.sfc or .smc), without a copier header or patches.",
+      "formats": [
+        {
+          "type": "file",
+          "extensions": [
+            "sfc",
+            "smc"
+          ]
+        }
+      ]
+    }
+  ],
+  "prepare": {
+    "program": [
+      "MightyMorphinPowerRangersTheMovieSNESRecomp.exe"
+    ],
+    "args": [
+      "--import-rom",
+      "{input:rom}"
+    ],
+    "label": "Verify and import your USA ROM",
+    "timeout": 60
+  },
+  "start": {
+    "program": [
+      "MightyMorphinPowerRangersTheMovieSNESRecomp.exe"
+    ],
+    "args": [
+      "--no-launcher"
+    ]
+  },
+  "config": [
+    {
+      "format": "ini",
+      "file": [
+        {
+          "path": "{local}/PowerRangersMovieRecomp/config.ini"
+        }
+      ],
+      "new": {
+        "General/Autosave": "0",
+        "Graphics/GraphicsProfileVersion": "4",
+        "Graphics/GraphicsMode": "1",
+        "Graphics/GraphicsFilter": "1",
+        "Graphics/NewRenderer": "1",
+        "Graphics/NoSpriteLimits": "1",
+        "Graphics/Fullscreen": "1",
+        "Graphics/WindowScale": "3",
+        "Graphics/IgnoreAspectRatio": "0",
+        "Graphics/DisplayAspect": "0",
+        "Graphics/IntegerScale": "0",
+        "Graphics/VSync": "1",
+        "Sound/EnableAudio": "1",
+        "Sound/Volume": "100",
+        "KeyMap/QuickSave": "F1",
+        "KeyMap/QuickLoad": "F2",
+        "KeyMap/SaveStateMenu": "F11",
+        "KeyMap/GraphicsToggle": "F6",
+        "KeyMap/GraphicsMenu": "F10",
+        "KeyMap/HDReload": "F4",
+        "KeyMap/OpenLauncher": "Ctrl+l",
+        "GamepadMap/EnableGamepad1": "true",
+        "GamepadMap/EnableGamepad2": "true"
+      }
+    }
+  ],
+  "settings": [
+    {
+      "id": "vsync",
+      "label": "V-Sync",
+      "help": "Synchronize presentation with your display to reduce tearing.",
+      "choices": [
+        {
+          "label": "On",
+          "set": {
+            "Graphics/VSync": "1"
+          }
+        },
+        {
+          "label": "Off",
+          "set": {
+            "Graphics/VSync": "0"
+          }
+        }
+      ],
+      "defaults": {
+        "Graphics/VSync": "1"
+      }
+    },
+    {
+      "id": "audio",
+      "label": "Audio",
+      "choices": [
+        {
+          "label": "On",
+          "set": {
+            "Sound/EnableAudio": "1"
+          }
+        },
+        {
+          "label": "Off",
+          "set": {
+            "Sound/EnableAudio": "0"
+          }
+        }
+      ],
+      "defaults": {
+        "Sound/EnableAudio": "1"
+      }
+    },
+    {
+      "id": "volume",
+      "label": "Volume",
+      "slider": {
+        "key": "Sound/Volume",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "format": "%d"
+      },
+      "defaults": {
+        "Sound/Volume": "100"
+      }
+    }
+  ],
+  "saves": [
+    "{local}/PowerRangersMovieRecomp/saves"
+  ],
+  "exit_codes": {
+    "1": "Could not initialize the game or its user-data folder. Check the runtime report.",
+    "2": "Select the original USA SNES ROM without a copier header or patches (1,572,864 bytes).",
+    "3": "Could not import your ROM. Check free space and permissions in your user-data folder."
+  }
+}
