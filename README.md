@@ -1,6 +1,6 @@
 ﻿<div align="center">
 
-<img src="images/logo-removebg-preview.png" alt="Mighty Morphin Power Rangers: The Movie" width="600">
+<img src="images/logo2.png" alt="Mighty Morphin Power Rangers: The Movie" width="600">
 
 # ⚡ It's Morphin Time!
 
@@ -224,7 +224,7 @@ Projeto de fãs, sem afiliação oficial aos detentores de Power Rangers. As mar
 
 <div align="center">
 <br>
-<img src="images/icon_1.jpg" alt="Ícone do projeto Power Rangers" width="110">
+<img src="images/icon.jpg" alt="Ícone do projeto Power Rangers" width="110">
 
 **Go Go Power Rangers! ⚡**
 
