@@ -1,8 +1,15 @@
 # RecompLauncher
 
+## Distribuição recomendada
+
+Use `Power-Rangers-The-Movie-PC-v0.2.1-Windows-x64.zip` como distribuição
+exclusiva no RecompLauncher. O sufixo explícito identifica plataforma e
+arquitetura. Instaladores `.exe` não são gerados nem publicados pelo fluxo
+normal; os arquivos Inno Setup permanecem somente para manutenção histórica.
+
 O pacote Windows jogável inclui `recomplauncher.json` ao lado do executável.
-`installer/build.ps1` gera tanto o instalador quanto um ZIP `windows-x64`;
-ambos usam o mesmo staging, sem ROM, configurações pessoais ou saves.
+`installer/build.ps1` gera somente o ZIP portátil, seu `.sha256` e
+`SHA256SUMS.txt`, usando staging sem ROM, configurações pessoais ou saves.
 
 O perfil usa um input de arquivo `.sfc`/`.smc` e reaproveita `--import-rom`
 como preparação silenciosa. Esse comando verifica tamanho e SHA-256 antes
@@ -30,16 +37,23 @@ silencioso nem as opções da edição retail. Não há AppImage neste projeto.
 
 ## Verificação manual no launcher
 
-Em Settings > Developers, habilite Developer tools e use Add a build na pasta
-extraída do ZIP. Confira o Developer tab, importe sua ROM USA, altere o volume
-e pressione Play. Confirme o áudio, os saves e o retorno ao launcher ao sair.
-Teste também uma ROM inválida: a preparação deve falhar com código 2.
+1. Em Settings > Developers, habilite Developer Tools e escolha Add a build.
+2. Selecione `Power-Rangers-The-Movie-PC-v0.2.1-Windows-x64.zip`.
+3. Confirme que o perfil é aceito e que Easy Setup solicita a ROM sem erro.
+4. Importe sua ROM USA original e sem cabeçalho; confirme a validação.
+5. Pressione Play e verifique vídeo e áudio.
+6. Verifique teclado/controle e crie, carregue e liste saves.
+7. Reinstale a mesma build e confirme que configuração, controles e saves
+   foram preservados.
 
-## Empacotar e publicar a próxima release Windows
+Registre a versão do RecompLauncher, sistema, resultado de cada passo e logs.
+Teste também uma ROM inválida: a preparação deve falhar com código 2. Não
+declare aprovação antes de concluir esse teste real.
 
-A versão atual em `VERSION` é `0.2.0`. A integração ainda não foi publicada.
-Para uma nova release, escolha a próxima versão (por exemplo, `0.2.1`), atualize
-`VERSION` e as notas. Não substitua silenciosamente os binários da v0.2.0.
+## Empacotar e publicar a release Windows
+
+A versão em `VERSION` é `0.2.1`. A validação de schema e os testes automatizados
+não equivalem à análise final da equipe do RecompLauncher.
 
 1. Revise e versione os arquivos desta integração. As alterações locais já
    existentes em `snesrecomp` são independentes: revise-as antes de decidir o
@@ -50,24 +64,26 @@ Para uma nova release, escolha a próxima versão (por exemplo, `0.2.1`), atuali
    powershell -NoProfile -ExecutionPolicy Bypass -File installer/build.ps1
    ```
 
-   Requer MSVC/Visual Studio 2022, CMake, dependências do projeto e Inno Setup.
-   O script compila a edição retail e gera o instalador existente, o ZIP
-   `dist/Power-Rangers-The-Movie-PC-v<VERSION>-windows-x64.zip` e seus SHA-256.
+   Requer MSVC/Visual Studio 2022, CMake e as dependências do projeto. O script
+   compila a edição retail e gera somente o ZIP
+   `dist/Power-Rangers-The-Movie-PC-v<VERSION>-Windows-x64.zip`, seu `.sha256`
+   e `dist/SHA256SUMS.txt`.
    `-SkipBuild` serve apenas quando o Release já foi compilado e conferido.
 3. Baixe o guia oficial para `build/recomplauncher-agent.md`, instale `jsonschema`
    em um ambiente Python e valide o pacote (substitua a versão no caminho):
 
    ```powershell
-   python scripts/validate_recomplauncher.py --guide build/recomplauncher-agent.md --zip dist/Power-Rangers-The-Movie-PC-v0.2.1-windows-x64.zip
+   python scripts/validate_recomplauncher.py --guide build/recomplauncher-agent.md --zip dist/Power-Rangers-The-Movie-PC-v0.2.1-Windows-x64.zip
    python installer/test-rom.py --exe build-installer/Release/MightyMorphinPowerRangersTheMovieSNESRecomp.exe --rom 'C:/caminho/sua-ROM-USA.sfc'
    ```
 
 4. Extraia o ZIP numa pasta limpa e faça a verificação manual no RecompLauncher
-   descrita acima. Teste também a abertura direta do executável e o instalador.
+   descrita acima. Teste também a abertura direta do executável.
    Confira que importar novamente preserva saves, controles e preferências.
+   O ZIP deve ter `recomplauncher.json` e o EXE diretamente na raiz.
 5. Crie uma release GitHub com tag igual a `v<VERSION>` e notas explicando Easy
    Setup, ROM USA obrigatória, opções disponíveis e limitações. Anexe o ZIP,
-   seu `.sha256`, o instalador e seu `.sha256`. Marque versões de teste como
+   seu `.sha256` e `SHA256SUMS.txt`. Nunca anexe o instalador. Marque versões de teste como
    pré-release. Não publique a pasta de staging ou os fixtures de teste.
 6. Se o projeto continuar fora do catálogo, envie o repositório em
    https://recomplauncher.com/submit?platform=pc e informe o uso de `inputs`,
@@ -85,7 +101,7 @@ opções e preparação; não anuncia o nível 3 completo com badge de dump veri
 - Guia oficial baixado novamente e comparado: sem mudanças no conteúdo.
 - Perfil validado contra o JSON Schema draft-07 embutido no guia; defaults
   comparados com `kGameDefaultConfig`, sem `always` para forçar preferências.
-- Build Windows Release concluído. ZIP e instalador v0.2.0 gerados localmente;
+- Build Windows Release concluído. ZIP v0.2.1 gerado localmente;
   ZIP conferido quanto ao perfil na raiz, executável, ROM conhecida e dados pessoais.
 - Os 12 casos de `installer/test-rom.py` passaram: ROM válida e renomeada,
   Unicode, corrupção, região sintética incompatível, tamanho inválido,
@@ -97,8 +113,9 @@ opções e preparação; não anuncia o nível 3 completo com badge de dump veri
   argumentos quanto com `--no-launcher`. Nenhuma alteração de runtime foi feita.
 - Transformação do perfil de setup pack testada com ZIP sintético e schema;
   o setup pack completo multiplataforma não foi reconstruído nesta revisão.
-- O instalador foi recompilado; instalação/reinstalação e o fluxo dentro do
-  aplicativo RecompLauncher ainda precisam de validação manual para publicação.
+- O fluxo legado de instalação também foi auditado antes de ser retirado da
+  distribuição pública. O fluxo dentro do aplicativo RecompLauncher ainda
+  precisa de validação manual pela equipe.
 
 ## Melhorias pendentes
 

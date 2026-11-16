@@ -1,7 +1,6 @@
 [CmdletBinding()]
 param(
  [string]$BuildDir = 'build-installer',
- [string]$Iscc = '',
  [string]$CrtDir = '',
  [switch]$SkipBuild
 )
@@ -20,10 +19,6 @@ function Invoke-Native([string]$Program, [string[]]$Arguments) {
  try { $ErrorActionPreference = 'Continue'; & $Program @Arguments; $code = $LASTEXITCODE }
  finally { $ErrorActionPreference = $saved }
  if ($code -ne 0) { throw "$Program failed: $code" }
-}
-if (!$Iscc) {
- $localCompiler = Join-Path $root '.deps/inno/compiler/ISCC.exe'
- if (Test-Path $localCompiler) { $Iscc = $localCompiler } else { $Iscc = 'ISCC.exe' }
 }
 if (!$SkipBuild) {
  $configure = @('-S',$root,'-B',$build,'-G','Visual Studio 17 2022','-A','x64',
@@ -85,8 +80,10 @@ if (!$CrtDir) {
 }
 foreach ($dll in @('msvcp140.dll','vcruntime140.dll','vcruntime140_1.dll')) {
  if (!(Test-Path (Join-Path $CrtDir $dll))) { throw "Missing redistributable: $dll" }
+ Copy-Item -LiteralPath (Join-Path $CrtDir $dll) -Destination $stage
 }
-Copy-Item (Join-Path $CrtDir '*.dll') $stage
+# dependencies.cmake copies only the signed CRT files the executable actually
+# imports (and their transitive dependencies), not every DLL in the redist set.
 Invoke-Native cmake @("-DEXE=$(Join-Path $stage (Split-Path $exe -Leaf))",
  "-DCRT=$CrtDir", "-DSTAGE=$stage", '-P', 'installer/dependencies.cmake')
 $forbidden = Get-ChildItem $stage -File -Recurse | Where-Object {
@@ -100,14 +97,12 @@ $manifest = Get-ChildItem $stage -File -Recurse | ForEach-Object {
   sha256=(Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash }
 }
 $manifest | ConvertTo-Json | Set-Content -Encoding UTF8 (Join-Path $stage 'manifest.json')
-$portable = Join-Path $root "dist/Power-Rangers-The-Movie-PC-v$version-windows-x64.zip"
+$portable = Join-Path $root "dist/Power-Rangers-The-Movie-PC-v$version-Windows-x64.zip"
 Compress-Archive -Path (Join-Path $stage '*') -DestinationPath $portable -Force
-(Get-FileHash -LiteralPath $portable -Algorithm SHA256).Hash + '  ' + (Split-Path $portable -Leaf) |
- Set-Content -Encoding ASCII ($portable + '.sha256')
-Invoke-Native $Iscc @("/DStageDir=$stage", "/DOutputDir=$(Join-Path $root 'dist')",
- "/DReleaseVersion=$version", "/DRomSHA256=$($identity['expected_sha256'])",
- "/DRomFileName=$($identity['rom_file'])", 'installer/power-rangers.iss')
-$setup = Join-Path $root "dist/Power-Rangers-The-Movie-PC-Setup-v$version.exe"
-(Get-FileHash -LiteralPath $setup -Algorithm SHA256).Hash + '  ' + (Split-Path $setup -Leaf) |
- Set-Content -Encoding ASCII ($setup + '.sha256')
-Write-Output $setup
+$sum = (Get-FileHash -LiteralPath $portable -Algorithm SHA256).Hash.ToLowerInvariant() +
+ '  ' + (Split-Path $portable -Leaf)
+$sum | Set-Content -Encoding ASCII ($portable + '.sha256')
+$sum | Set-Content -Encoding ASCII (Join-Path $root 'dist/SHA256SUMS.txt')
+Write-Output $portable
+Write-Output ($portable + '.sha256')
+Write-Output (Join-Path $root 'dist/SHA256SUMS.txt')

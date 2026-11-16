@@ -150,16 +150,17 @@ include(${RECOMP_UI_ROOT}/recomp_ui.cmake)
 recomp_target_launcher_ui(MightyMorphinPowerRangersTheMovieSNESRecomp CONSOLE snes
     BOXART "${CMAKE_SOURCE_DIR}/launcher_assets/img/boxart.tga")
 
-# Generate & rebuild from inside the launcher: pick ROM -> recompile locally
-# -> cmake --build -> relaunch. The implementation is the framework's; this
-# project contributes no configuration (snesrecomp_codegen_host_autowire in
-# src/main.c). recomp-ui/src is on the include path because the host speaks
-# RecompLauncherCGameInfo.
-target_sources(MightyMorphinPowerRangersTheMovieSNESRecomp PRIVATE
-    ${SNESRECOMP_ROOT}/host/snesrecomp_codegen_host.c)
-target_include_directories(MightyMorphinPowerRangersTheMovieSNESRecomp PRIVATE
-    ${SNESRECOMP_ROOT}/host
-    ${RECOMP_UI_ROOT}/src)
+# Generate & rebuild belongs only to source/setup-host builds. The retail
+# executable already contains recompiled code and imports a verified ROM; it
+# must not carry the toolchain downloader, hidden process creation or rebuild
+# and relaunch implementation.
+if(NOT POWER_RANGERS_RETAIL_WINDOWS)
+    target_sources(MightyMorphinPowerRangersTheMovieSNESRecomp PRIVATE
+        ${SNESRECOMP_ROOT}/host/snesrecomp_codegen_host.c)
+    target_include_directories(MightyMorphinPowerRangersTheMovieSNESRecomp PRIVATE
+        ${SNESRECOMP_ROOT}/host
+        ${RECOMP_UI_ROOT}/src)
+endif()
 
 # Netplay is not built into this target.
 # No multitap: two seats, one controller per port.

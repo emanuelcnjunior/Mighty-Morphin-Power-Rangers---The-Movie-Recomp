@@ -9,6 +9,7 @@
 /dist/
 /saves/
 /.deps/
+/.audit/
 /.scaffold/
 /src/gen/*
 /recomp/funcs.h

@@ -1,7 +1,7 @@
 MIGHTY MORPHIN POWER RANGERS - THE MOVIE PC RECOMP
 
-Este programa nao inclui a ROM. O instalador pede sua propria ROM USA original
-de SNES, sem cabecalho ou patches, e verifica o conteudo antes de importar.
+Este programa nao inclui a ROM. O RecompLauncher pede sua propria ROM USA
+original de SNES, sem cabecalho ou patches, e verifica o conteudo antes de importar.
 
 CONTROLES
 F1 ou L2: Quick Save
@@ -20,8 +20,9 @@ DADOS DO USUARIO
 Saves: subpasta saves
 Texturas externas: subpasta hd-packs
 
-Desinstalar preserva sua ROM, configuracoes e saves. Atualizacoes do runtime
-podem exigir novos estados; mantenha uma copia dos seus saves importantes.
+Remover ou atualizar a pasta do programa preserva sua ROM, configuracoes e
+saves. Atualizacoes do runtime podem exigir novos estados; mantenha uma copia
+dos seus saves importantes.
 
 Projeto de fas, nao oficial e nao comercial. Licencas e atribuicoes acompanham
 o programa na pasta licenses.

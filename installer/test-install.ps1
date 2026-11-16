@@ -32,7 +32,7 @@ function Note([string]$message) {
 }
 function Install([string]$name) {
  $arguments = @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/SP-',
-  '/TASKS=desktopicon', ('/ROM="' + $Rom + '"'), ('/DIR="' + $install + '"'),
+  '/TASKS=desktopicon', ('/DIR="' + $install + '"'),
   ('/LOG="' + (Join-Path $testRoot ($name + '.log')) + '"'))
  $process = Start-Process -FilePath $setup -ArgumentList $arguments -WindowStyle Hidden -Wait -PassThru
  if ($process.ExitCode -ne 0) { throw "Installer failed: $($process.ExitCode)" }
@@ -67,23 +67,16 @@ function Smoke([string]$name) {
  }
 }
 try {
- # Invalid unattended requests must not install any payload or import a ROM.
- foreach ($case in @('missing','invalid')) {
-  $arguments = @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/SP-',('/DIR="'+$install+'"'))
-  if ($case -eq 'invalid') {
-   $invalid = Join-Path $testRoot 'invalid.sfc'
-   'not a ROM' | Set-Content -LiteralPath $invalid -Encoding ASCII
-   $arguments += '/ROM="'+$invalid+'"'
-  }
-  $process = Start-Process -FilePath $setup -ArgumentList $arguments -WindowStyle Hidden -Wait -PassThru
-  if ($process.ExitCode -eq 0 -or (Test-Path (Join-Path $install 'MightyMorphinPowerRangersTheMovieSNESRecomp.exe'))) {
-   throw "Installer accepted $case ROM"
-  }
-  Note "Installer rejects $case ROM before installing"
- }
  Install 'install'
  $exe = Join-Path $install 'MightyMorphinPowerRangersTheMovieSNESRecomp.exe'
  $romDest = Join-Path $data $canonicalName
+ $invalid = Join-Path $testRoot 'invalid.sfc'
+ 'not a ROM' | Set-Content -LiteralPath $invalid -Encoding ASCII
+ $process = Start-Process -FilePath $exe -ArgumentList @('--import-rom',('"'+$invalid+'"')) -WindowStyle Hidden -Wait -PassThru
+ if ($process.ExitCode -ne 2 -or (Test-Path $romDest)) { throw 'Import accepted an invalid ROM.' }
+ Note 'Installed importer rejects an invalid ROM without writing user data'
+ $process = Start-Process -FilePath $exe -ArgumentList @('--import-rom',('"'+$Rom+'"')) -WindowStyle Hidden -Wait -PassThru
+ if ($process.ExitCode -ne 0) { throw "Valid ROM import failed: $($process.ExitCode)" }
  if ((Get-FileHash -LiteralPath $romDest -Algorithm SHA256).Hash -ne $sha) { throw 'Imported ROM differs.' }
  Note 'Valid user ROM imported under the canonical name outside the program directory'
  $forbidden = Get-ChildItem -LiteralPath $install -Recurse -File | Where-Object {

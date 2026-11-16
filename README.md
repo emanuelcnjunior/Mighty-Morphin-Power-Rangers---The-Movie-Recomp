@@ -11,7 +11,7 @@ Save states, controles configuráveis e apresentação Original/HD no Windows.
 
 <p>
 <img src="https://img.shields.io/badge/Windows-x64-0078D4?style=for-the-badge" alt="Windows x64">
-<img src="https://img.shields.io/badge/Versão-0.2.0-D62828?style=for-the-badge" alt="Versão 0.2.0">
+<img src="https://img.shields.io/badge/Versão-0.2.1-D62828?style=for-the-badge" alt="Versão 0.2.1">
 <img src="https://img.shields.io/badge/ROM-USA%20SNES-E8B343?style=for-the-badge" alt="Requer ROM USA SNES">
 <img src="https://img.shields.io/badge/Status-Em%20desenvolvimento-7657C5?style=for-the-badge" alt="Em desenvolvimento">
 </p>
@@ -33,29 +33,35 @@ Save states, controles configuráveis e apresentação Original/HD no Windows.
 
 ### 1 · Baixe a edição Windows
 
-Abra a página de **[Releases](https://github.com/emanuelcnjunior/Mighty-Morphin-Power-Rangers---The-Movie-Recomp/releases)** e escolha o instalador Windows. Na v0.2.0, o arquivo se chama:
+Abra a página de **[Releases](https://github.com/emanuelcnjunior/Mighty-Morphin-Power-Rangers---The-Movie-Recomp/releases/latest)** e baixe o pacote portátil Windows x64:
 
 ```text
-Power-Rangers-The-Movie-PC-Setup-v0.2.0.exe
+Power-Rangers-The-Movie-PC-v0.2.1-Windows-x64.zip
 ```
 
 O pacote para jogadores inclui o runtime necessário. **Você não precisa instalar Python, Rust, CMake ou Visual Studio para jogar.**
 
 ### 2 · Selecione sua ROM USA
 
-Execute o instalador e indique sua ROM original compatível. Após a verificação, ela é importada para a pasta de dados do usuário. Abra o jogo pelo atalho criado pelo instalador.
+Não execute o jogo diretamente do ZIP. No RecompLauncher, abra **Settings → Developers**, habilite **Developer Tools**, escolha **Add a build** e selecione o ZIP. O Easy Setup solicitará sua ROM original compatível, verificará seu conteúdo e a importará para a pasta de dados do usuário.
 
 ### 3 · Prepare seu controle e entre na ação
 
 O jogo abre em tela cheia. Use o launcher para configurar os controles e **F10** para ajustar a apresentação durante a partida. Confira os atalhos abaixo para salvar e retomar seu progresso.
 
-📖 **[Guia completo do instalador](installer/README.md)**
+📖 **[Guia completo da distribuição Windows](installer/README.md)**
 
 ### Pelo RecompLauncher
 
+A distribuição pública da v0.2.1 é exclusivamente
+`Power-Rangers-The-Movie-PC-v0.2.1-Windows-x64.zip`. Instaladores `.exe` não
+são gerados nem publicados pelo fluxo normal.
+
 A integração adicionada ao repositório permite selecionar a ROM, verificá-la com o importador existente e iniciar diretamente o jogo. Também expõe **volume, áudio e V-Sync** no launcher.
 
-O empacotamento gera um ZIP `windows-x64` com `recomplauncher.json` ao lado do executável. Quando esse pacote estiver disponível em uma release, extraia-o e adicione a pasta em **Settings → Developers → Add a build** para testar localmente.
+O empacotamento gera o ZIP com `recomplauncher.json` ao lado do executável. Em
+**Settings → Developers → Add a build**, selecione o ZIP e valide Easy Setup
+localmente.
 
 > A integração ainda precisa de validação de ponta a ponta dentro do aplicativo RecompLauncher antes de ser anunciada como testada.
 
@@ -118,7 +124,7 @@ A edição Windows mantém os dados pessoais separados dos arquivos do programa:
 └── …               ROM importada e demais dados locais
 ```
 
-O instalador preserva a ROM importada, as configurações e os saves ao desinstalar. A integração com RecompLauncher usa a mesma pasta e não altera o formato dos saves. Seu perfil de backup aponta para `saves`, sem incluir a ROM.
+O RecompLauncher mantém a ROM importada, as configurações e os saves na pasta de dados do usuário. Atualizar ou remover a pasta extraída não altera esses dados. O perfil de backup aponta para `saves`, sem incluir a ROM.
 
 ## 🚧 Estado do projeto
 
@@ -189,13 +195,13 @@ cmake --build build --config Release --parallel 4
 
 O código derivado da ROM em `src/gen/` é ignorado pelo Git e deve permanecer local.
 
-Para gerar a distribuição retail Windows com instalador e ZIP:
+Para gerar exclusivamente o ZIP portátil Windows x64 e seus hashes:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File installer/build.ps1
 ```
 
-Esse fluxo também requer Inno Setup. `scripts/package_release.sh` mantém o fluxo separado dos antigos setup packs, que recompilam localmente.
+Esse fluxo não requer Inno Setup. Os scripts antigos do Inno Setup permanecem apenas para manutenção histórica e não fazem parte da distribuição pública. `scripts/package_release.sh` mantém um fluxo separado de desenvolvimento para antigos setup packs que recompilam localmente.
 
 📖 [Empacotamento Windows](installer/README.md) · [Checklist de publicação RecompLauncher](docs/recomplauncher.md)
 

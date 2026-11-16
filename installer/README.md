@@ -1,28 +1,29 @@
-# Instalador Windows
+# Distribuição Windows x64
 
-O instalador inclui o executável jogável, o ícone do Ranger Vermelho, recursos
+O ZIP `Power-Rangers-The-Movie-PC-v0.2.1-Windows-x64.zip` é a única distribuição
+pública para Windows x64. O fluxo normal não gera nem publica instaladores
+`.exe`. Os arquivos antigos do Inno Setup permanecem no código-fonte somente
+para manutenção histórica.
+
+O ZIP inclui o executável jogável, o ícone do Ranger Vermelho, recursos
 do launcher, licenças e o runtime Visual C++. Não inclui a ROM, saves, código
 gerado, ferramentas de desenvolvimento ou o cache `rom.cfg` desta máquina.
 O usuário não precisa instalar Python, Rust, CMake ou Visual Studio para jogar.
 
-## Instalar e jogar
+## Extrair e jogar
 
-1. Execute `Power-Rangers-The-Movie-PC-Setup-v0.2.0.exe`.
-2. Escolha sua ROM **USA original**, sem cabeçalho de copiador e sem patches.
+1. Baixe `Power-Rangers-The-Movie-PC-v0.2.1-Windows-x64.zip` na Release.
+2. Extraia o ZIP para uma pasta gravável; não execute o jogo de dentro do arquivo.
+3. No RecompLauncher, habilite **Settings → Developers → Developer Tools**,
+   escolha **Add a build** e selecione o ZIP.
+4. No Easy Setup, escolha sua ROM **USA original**, sem cabeçalho de copiador e sem patches.
    O nome e a extensão podem ser diferentes: o conteúdo é validado por SHA-256.
-3. Mantenha marcada a opção de atalho na Área de Trabalho se desejar.
-4. Ao terminar, abra o jogo pelo atalho com o ícone do Ranger Vermelho.
+5. Inicie a build pelo RecompLauncher.
 
 A ROM compatível possui 1.572.864 bytes e SHA-256:
 
 ```text
 c706b70097c679f6f0ced6f77a30620807d0b2555fc3c683c0ec2fc791176039
-```
-
-O programa é instalado por usuário em:
-
-```text
-%LOCALAPPDATA%\Programs\PowerRangersMovieRecomp\
 ```
 
 A ROM verificada é importada com nome padronizado para:
@@ -32,8 +33,8 @@ A ROM verificada é importada com nome padronizado para:
 ```
 
 Saves ficam na subpasta `saves`, pacotes de texturas em `hd-packs` e o
-`config.ini` da edição instalada fica nessa mesma pasta de dados. Desinstalar
-remove o programa e seus atalhos, preservando ROM, configurações e saves.
+`config.ini` fica nessa mesma pasta de dados. Remover ou atualizar a pasta
+extraída preserva ROM, configurações e saves.
 Na próxima execução, o programa verifica a cópia importada; se estiver ausente
 ou inválida, pede novamente uma ROM compatível.
 
@@ -45,14 +46,13 @@ ou inválida, pede novamente uma ROM compatível.
 - **Alt+Enter:** janela/tela cheia. O jogo abre em tela cheia por padrão.
 
 O usuário relatou que o atalho Select não alternou o modo HD nesta máquina.
-Use F6 ou F10; o instalador não depende desse atalho. O HD atual suaviza os
+Use F6 ou F10; a distribuição não depende desse atalho. O HD atual suaviza os
 pixels e suporta pacotes externos; não inclui arte redesenhada do jogo.
 
-## Gerar o instalador
+## Gerar a distribuição ZIP
 
 Requer o ambiente de desenvolvimento do projeto, uma ROM local para gerar o
-código, Visual C++ x64 e Inno Setup. A ferramenta Inno pode ser mantida em
-`.deps/inno/compiler/ISCC.exe` em modo portátil ou informada com `-Iscc`.
+código e Visual C++ x64. Inno Setup não é necessário.
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File installer/build.ps1
@@ -62,15 +62,19 @@ O script cria um build separado `build-installer`, seleciona explicitamente a
 entrada retail e verifica dependências. O payload vem de uma lista de recursos
 conhecidos; a validação recusa ROMs, saves, cache e arquivos de desenvolvimento.
 O hash, tamanho e nome esperados da ROM vêm de `rom_identity.txt`.
+O instalador não executa o jogo, scripts ou downloads durante a instalação;
+a importação ocorre no primeiro uso. O módulo de download/rebuild do setup
+pack não é ligado ao executável retail.
 
-Saídas:
+O fluxo normal gera somente:
 
 ```text
-dist/Power-Rangers-The-Movie-PC-Setup-v0.2.0.exe
-dist/Power-Rangers-The-Movie-PC-Setup-v0.2.0.exe.sha256
+dist/Power-Rangers-The-Movie-PC-v0.2.1-Windows-x64.zip
+dist/Power-Rangers-The-Movie-PC-v0.2.1-Windows-x64.zip.sha256
+dist/SHA256SUMS.txt
 ```
 
-O `.ico` usado pelo executável, instalador e atalhos está em
+O `.ico` usado pelo executável está em
 `installer/assets/power-rangers.ico`. Fonte e prompt da arte em
 `installer/assets/ICON-SOURCE.md`.
 
@@ -91,5 +95,8 @@ teste no final. Ele recusa executar se já existirem instalação ou atalhos com
 os mesmos nomes, para não sobrescrevê-los. A ROM e os saves normais do usuário
 não são modificados. Logs, fixtures e capturas ficam em diretórios ignorados.
 
-O script `scripts/package_release.sh` permanece como fluxo separado para packs
-de desenvolvimento/setup que recompilam localmente; não gera este instalador.
+`installer/power-rangers.iss` e `installer/test-install.ps1` permanecem somente
+para manutenção histórica do fluxo Inno e não são chamados por `build.ps1`.
+O script `scripts/package_release.sh` é um fluxo separado de desenvolvimento
+para antigos setup packs que recompilam localmente; ele não gera a distribuição
+Windows x64 publicada.
