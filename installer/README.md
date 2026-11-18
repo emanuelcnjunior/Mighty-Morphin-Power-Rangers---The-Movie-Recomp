@@ -5,7 +5,7 @@ pública para Windows x64. O fluxo normal não gera nem publica instaladores
 `.exe`. Os arquivos antigos do Inno Setup permanecem no código-fonte somente
 para manutenção histórica.
 
-O ZIP inclui o executável jogável, o ícone do Ranger Vermelho, recursos
+O ZIP inclui o executável jogável, o ícone do Ranger Branco, recursos
 do launcher, licenças e o runtime Visual C++. Não inclui a ROM, saves, código
 gerado, ferramentas de desenvolvimento ou o cache `rom.cfg` desta máquina.
 O usuário não precisa instalar Python, Rust, CMake ou Visual Studio para jogar.
@@ -14,11 +14,10 @@ O usuário não precisa instalar Python, Rust, CMake ou Visual Studio para jogar
 
 1. Baixe `Power-Rangers-The-Movie-PC-v0.2.1-Windows-x64.zip` na Release.
 2. Extraia o ZIP para uma pasta gravável; não execute o jogo de dentro do arquivo.
-3. No RecompLauncher, habilite **Settings → Developers → Developer Tools**,
-   escolha **Add a build** e selecione o ZIP.
-4. No Easy Setup, escolha sua ROM **USA original**, sem cabeçalho de copiador e sem patches.
+3. Abra `MightyMorphinPowerRangersTheMovieSNESRecomp.exe`.
+4. Selecione sua ROM **USA original**, sem cabeçalho de copiador e sem patches.
    O nome e a extensão podem ser diferentes: o conteúdo é validado por SHA-256.
-5. Inicie a build pelo RecompLauncher.
+5. Quando o launcher abrir, selecione **Play**. Se cancelar a seleção da ROM, o programa encerra.
 
 A ROM compatível possui 1.572.864 bytes e SHA-256:
 
@@ -35,8 +34,9 @@ A ROM verificada é importada com nome padronizado para:
 Saves ficam na subpasta `saves`, pacotes de texturas em `hd-packs` e o
 `config.ini` fica nessa mesma pasta de dados. Remover ou atualizar a pasta
 extraída preserva ROM, configurações e saves.
-Na próxima execução, o programa verifica a cópia importada; se estiver ausente
-ou inválida, pede novamente uma ROM compatível.
+Ao abrir o executável novamente, o launcher usa a cópia importada. Se ela
+estiver ausente ou inválida, o programa pede a seleção da ROM. Pelo
+RecompLauncher, o Easy Setup importa a ROM e o botão Play usa a cópia validada.
 
 ## Controles principais
 
@@ -75,7 +75,7 @@ dist/SHA256SUMS.txt
 ```
 
 O `.ico` usado pelo executável está em
-`installer/assets/power-rangers.ico`. Fonte e prompt da arte em
+`installer/assets/white-ranger.ico`. Fontes da arte em
 `installer/assets/ICON-SOURCE.md`.
 
 ## Testes

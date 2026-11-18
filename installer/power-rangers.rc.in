@@ -1,5 +1,5 @@
 #include <windows.h>
-1 ICON "@CMAKE_SOURCE_DIR@/installer/assets/power-rangers.ico"
+1 ICON "@CMAKE_SOURCE_DIR@/installer/assets/white-ranger.ico"
 1 VERSIONINFO
  FILEVERSION @POWER_RANGERS_RESOURCE_VERSION@,0
  PRODUCTVERSION @POWER_RANGERS_RESOURCE_VERSION@,0

@@ -43,7 +43,7 @@ Copy-Item installer/LEIA-ME.txt (Join-Path $stage 'LEIA-ME.txt')
 $assets = Join-Path (Split-Path $exe) 'assets'
 $required = @('fonts/LatoLatin-Regular.ttf','fonts/LatoLatin-Bold.ttf',
  'fonts/NotoSansSymbols2-Regular.ttf','fonts/OpenMoji-black-glyf.ttf',
- 'img/brand_mark.tga','img/pad.tga','img/flags.png','img/verdict_ok.tga',
+ 'img/brand_mark.tga','img/boxart.tga','img/pad.tga','img/flags.png','img/verdict_ok.tga',
  'img/verdict_bad.tga','img/verdict_none.tga','img/verdict_warn.tga')
 foreach ($item in $required) {
  if (!(Test-Path (Join-Path $assets $item))) { throw "Missing launcher resource: $item" }

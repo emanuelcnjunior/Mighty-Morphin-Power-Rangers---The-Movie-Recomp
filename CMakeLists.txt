@@ -144,11 +144,10 @@ if(NOT EXISTS "${RECOMP_UI_ROOT}/recomp_ui.cmake")
         "Run: git submodule update --init --recursive recomp-ui")
 endif()
 include(${RECOMP_UI_ROOT}/recomp_ui.cmake)
-# BOXART stages launcher_assets/img/boxart.tga beside the exe; the launcher
-# shows assets/img/boxart.tga by default. EXISTS-guarded in recomp_ui.cmake,
-# so this configures cleanly before any art is fetched.
+# Stage the film-inspired cover and the project's Red Ranger emblem.
 recomp_target_launcher_ui(MightyMorphinPowerRangersTheMovieSNESRecomp CONSOLE snes
-    BOXART "${CMAKE_SOURCE_DIR}/launcher_assets/img/boxart.tga")
+    BOXART "${CMAKE_SOURCE_DIR}/launcher_assets/img/boxart.tga"
+    BRAND "${CMAKE_SOURCE_DIR}/launcher_assets/img/brand_mark.tga")
 
 # Generate & rebuild belongs only to source/setup-host builds. The retail
 # executable already contains recompiled code and imports a verified ROM; it

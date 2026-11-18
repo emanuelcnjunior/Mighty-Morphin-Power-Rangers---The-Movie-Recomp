@@ -1,4 +1,9 @@
-# Shortcut icon
+# Windows icons
+
+The executable embeds `white-ranger.ico`, exported from the project's
+`images/icon.jpg` at 16, 24, 32, 48, 64, 128 and 256 pixels.
+
+## Red Ranger artwork
 
 Original illustrative fan-project artwork generated with the built-in ImageGen
 tool on 2026-11-13, at the user's request. It is not a pasted official logo.
@@ -17,3 +22,7 @@ logo. Produce one finished icon."
 
 Power Rangers characters and marks remain the property of their respective
 owners. The icon identifies this unofficial, noncommercial fan port.
+
+The in-game and startup launcher use the same Red Ranger artwork as their
+header emblem. Their cover image is exported from the existing project artwork
+`images/Screenshxxxot_2.jpg`.

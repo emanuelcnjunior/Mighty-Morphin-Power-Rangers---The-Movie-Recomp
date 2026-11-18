@@ -101,7 +101,7 @@ try {
  $bitmap = $icon.ToBitmap()
  $bitmap.Save((Join-Path $testRoot 'installed-icon.png'), [Drawing.Imaging.ImageFormat]::Png)
  $bitmap.Dispose(); $icon.Dispose()
- Note 'Desktop and Start menu shortcuts use the embedded Red Ranger icon'
+ Note 'Desktop and Start menu shortcuts use the embedded White Ranger icon'
  Smoke 'first-run'
  Note 'Installed game starts fullscreen with video/audio using the imported ROM'
  $settings = Join-Path $data 'config.ini'

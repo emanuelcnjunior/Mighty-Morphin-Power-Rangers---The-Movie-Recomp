@@ -43,7 +43,7 @@ O pacote para jogadores inclui o runtime necessário. **Você não precisa insta
 
 ### 2 · Selecione sua ROM USA
 
-Não execute o jogo diretamente do ZIP. No RecompLauncher, abra **Settings → Developers**, habilite **Developer Tools**, escolha **Add a build** e selecione o ZIP. O Easy Setup solicitará sua ROM original compatível, verificará seu conteúdo e a importará para a pasta de dados do usuário.
+Extraia o ZIP antes de abrir o executável. Na primeira abertura, selecione o arquivo da sua ROM USA. Após a validação, o launcher abre e usa a cópia importada nas próximas execuções.
 
 ### 3 · Prepare seu controle e entre na ação
 

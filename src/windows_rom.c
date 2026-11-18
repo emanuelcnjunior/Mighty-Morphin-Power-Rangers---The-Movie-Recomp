@@ -79,6 +79,7 @@ int GameWindowsMain(int argc, char **argv, int (*run)(int, char **)) {
     if (!MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, destination, -1, wide_destination, 2048)) {
         LocalFree(wide_args); return 1;
     }
+    bool direct_launch = argc == 1;
     unsigned char *cached = importing ? NULL : ReadVerifiedRom(wide_destination);
     bool available = cached != NULL;
     free(cached);
@@ -123,10 +124,11 @@ int GameWindowsMain(int argc, char **argv, int (*run)(int, char **)) {
         SetCurrentDirectoryW(wide_exe_dir);
     bool explicit_config = false;
     for (int i = 1; i < argc; ++i) if (!strcmp(argv[i], "--config")) explicit_config = true;
-    char **args = calloc((size_t)argc + 5, sizeof(*args));
+    char **args = calloc((size_t)argc + 6, sizeof(*args));
     if (!args) return 1;
     for (int i = 0; i < argc; ++i) args[i] = argv[i];
     int n = argc;
+    if (direct_launch) args[n++] = "--launcher";
     args[n++] = "--rom"; args[n++] = destination;
     if (!explicit_config) { args[n++] = "--config"; args[n++] = config; }
     int result = run(n, args);
