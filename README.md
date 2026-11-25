@@ -1,4 +1,6 @@
-﻿<div align="center">
+﻿**Português (Brasil)** · [English](README.en.md)
+
+<div align="center">
 
 <img src="images/logo2.png" alt="Mighty Morphin Power Rangers: The Movie" width="600">
 
@@ -43,7 +45,7 @@ O pacote para jogadores inclui o runtime necessário. **Você não precisa insta
 
 ### 2 · Selecione sua ROM USA
 
-Extraia o ZIP antes de abrir o executável. Na primeira abertura, selecione o arquivo da sua ROM USA. Após a validação, o launcher abre e usa a cópia importada nas próximas execuções.
+Extraia o ZIP antes de abrir o executável. Dê um clique duplo em `Jogar.bat` (ou `Launcher.exe`) para abrir a interface gráfica do jogo. Selecione o arquivo da sua ROM USA, personalize os controles, ative seus cheats favoritos e clique em **JOGAR**. Após a validação, a configuração é salva para as próximas partidas.
 
 ### 3 · Prepare seu controle e entre na ação
 
@@ -112,6 +114,17 @@ localmente.
 
 > **Atalho Select em investigação:** foi implementado um toque em Select para alternar HD, mas houve relato de falha com DualShock 4. Use **F6** ou **F10** enquanto esse comportamento é investigado.
 
+## ⚡ Cheats e Códigos
+
+O projeto inclui um catálogo de truques Game Genie e Pro Action Replay (PAR) verificado para a edição USA em [`config/power_rangers_the_movie_usa.cht`](config/power_rangers_the_movie_usa.cht):
+- Vidas e continues infinitos
+- Energia infinita e invencibilidade
+- Barra especial no máximo e modo de teste
+
+A ferramenta [`tools/cheat_tool.py`](tools/cheat_tool.py) decodifica os códigos em endereços nativos da ROM/RAM e detecta conflitos entre truques incompatíveis.
+
+📖 **[Catálogo completo e guia de cheats](docs/cheats.md)**
+
 ## 📁 Seus dados, seu progresso
 
 A edição Windows mantém os dados pessoais separados dos arquivos do programa:
@@ -140,7 +153,13 @@ Projeto **em desenvolvimento**, com build Windows x64 e validação interativa a
 | Easy Setup dentro do aplicativo RecompLauncher | Validação manual pendente |
 | Compatibilidade do início ao fim do jogo | Ainda não estabelecida |
 
-Encontrou um problema? **[Abra uma issue](https://github.com/emanuelcnjunior/Mighty-Morphin-Power-Rangers---The-Movie-Recomp/issues)** com a versão, seu sistema, passos para reproduzir e relatórios disponíveis. Não anexe sua ROM.
+Encontrou um problema? **[Abra uma issue](https://github.com/emanuelcnjunior/Mighty-Morphin-Power-Rangers---The-Movie-Recomp/issues)** com a versão, seu sistema, passos para reproduzir e relatórios disponíveis. Para gerar um pacote de diagnóstico seguro (contendo logs do sistema e da sessão, sem incluir ROM ou dados pessoais), execute:
+
+```powershell
+python tools/run_diagnostic.py --rom "caminho/sua_rom.sfc"
+```
+
+Não anexe sua ROM.
 
 ## 🛠 Para desenvolvedores
 

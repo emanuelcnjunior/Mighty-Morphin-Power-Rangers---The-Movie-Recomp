@@ -1,0 +1,36 @@
+========================================================================
+Mighty Morphin Power Rangers: The Movie · PC Recomp - Windows x64
+========================================================================
+
+COMO JOGAR:
+1. Extraia o conteúdo deste arquivo ZIP para uma pasta de sua escolha.
+2. Dê um duplo clique em "Jogar.bat" ou execute "MightyMorphinPowerRangersTheMovieSNESRecomp.exe".
+3. Na primeira inicialização, selecione sua ROM original de Super Nintendo
+   "Mighty Morphin Power Rangers - The Movie (USA)" (.sfc ou .smc).
+   - A ROM deve ser a edição USA limpa, sem cabeçalho e sem patches (1.572.864 bytes).
+4. O jogo verificará a integridade por SHA-256 e importará uma cópia para:
+   %LOCALAPPDATA%\PowerRangersMovieRecomp\
+   Sua ROM original permanece intacta.
+
+CONTROLES PADRÃO:
+- Teclado:
+  * Salvar rápido:        F1
+  * Carregar save rápido: F2
+  * Menu de Saves:        F11
+  * Alternar Original/HD: F6
+  * Configurações vídeo:  F10
+  * Tela cheia:           Alt + Enter
+  * Abrir Launcher:       Ctrl + L
+
+- Controle (PlayStation / Xbox):
+  * Salvar rápido:        L2 / LT
+  * Carregar rápido:      R2 / RT
+  * Menu de Saves:        Share + R1
+  * Abrir Launcher:       Share + L3
+
+DADOS E PROGRESSO:
+Seus saves e configurações ficam em:
+%LOCALAPPDATA%\PowerRangersMovieRecomp\
+
+Repositório oficial:
+https://github.com/emanuelcnjunior/Mighty-Morphin-Power-Rangers---The-Movie-Recomp

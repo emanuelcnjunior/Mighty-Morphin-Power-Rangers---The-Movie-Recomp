@@ -35,3 +35,10 @@ if(WIN32)
   endif()
   add_test(NAME atomic_state_file COMMAND atomic_state_file)
 endif()
+
+find_package(Python3 COMPONENTS Interpreter QUIET)
+if(Python3_FOUND)
+  add_test(NAME tooling_unit_tests
+    COMMAND "${Python3_EXECUTABLE}" -m unittest discover -s "${CMAKE_CURRENT_SOURCE_DIR}" -v
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/..")
+endif()

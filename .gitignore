@@ -25,3 +25,14 @@
 *.smc
 *.srm
 *.log
+__pycache__/
+*.py[cod]
+/local/
+diagnostic-*.zip
+*.exe
+!launcher/Launcher.exe
+*.dll
+*.pdb
+*.zip
+!releases/*.zip
+!releases/*.sha256
